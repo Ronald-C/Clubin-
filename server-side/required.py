@@ -55,4 +55,6 @@ class Connection:
 			self.__connection.close()
 	## End def close
 
-t = Connection()
+if __name__ == '__main__':
+	tx = Connection()
+	tx.close()
