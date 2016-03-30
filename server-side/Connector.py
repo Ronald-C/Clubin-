@@ -38,11 +38,12 @@ class Connection:
 		try:
 			conn = mdb.connect(host, user, passwd, self.__database)
 			self.__connection = conn
-			self.__session = conn.cursor()
+			# Set data retrieval return type as dictionary
+			self.__session = conn.cursor(mdb.cursors.DictCursor)
 
 			self.__session.execute("SELECT VERSION()");
 			ver = self.__session.fetchone()
-			print "[SERVER] Running ver: %s " % ver
+			print "[SERVER] Database ver: %s " % ver
 
 		except mdb.Error as e:
 			print "Error %d: %s" % (e.args[0], e.args[1])
@@ -55,6 +56,14 @@ class Connection:
 			self.__connection.close()
 	## End def close
 
+def main():
+	try:
+		tx = Connection()
+		print "[Server] Test connection success"
+		tx.close()
+	except Exception, e:
+		print e
+		sys.exit(1)
+
 if __name__ == '__main__':
-	tx = Connection()
-	tx.close()
+	main()
