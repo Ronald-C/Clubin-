@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `Clubin` /*!40100 DEFAULT CHARACTER SET latin1 */;
+USE `Clubin`;
 -- MySQL dump 10.13  Distrib 5.5.47, for debian-linux-gnu (x86_64)
 --
 -- Host: 127.0.0.1    Database: Clubin
@@ -53,4 +55,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-04-06 17:17:20
+-- Dump completed on 2016-04-06 17:25:03
