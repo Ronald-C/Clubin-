@@ -12,6 +12,20 @@ import MySQLdb as mdb 		# _mysql Python wrapper
 from sys import exit
 from json import load
 
+import flask
+
+
+# Create the application.
+APP = flask.Flask(__name__)
+
+
+@APP.route('/')
+def index():
+    """ Displays the index page accessible at '/'
+    """
+    return flask.render_template('index.html')
+
+
 class Database(object):
 
 	__database		= None	
