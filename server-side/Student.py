@@ -91,5 +91,3 @@ class Student(Database):
 			self.conn.rollback()
 			print "[WARNING] %s" % e
 
-v = Student()
-v.join('007810023', 'SCE')
