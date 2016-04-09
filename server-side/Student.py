@@ -24,46 +24,55 @@ class Student(Database):
 			# Validate method arguments
 			self.__vStudent_Organization(studentID, organizationName)
 
+			# Get student unique ID
+			self.session.execute("""
+				SELECT s.`UID` FROM Student as s WHERE s.`SJSUID` = %s
+				""", studentID)
+
+			uidStudent = self.session.fetchone()['UID']
+
+			# Get organization unique ID
+			self.session.execute("""
+				SELECT o.`OrganizationID` FROM Organization as o WHERE o.`OrganizationName` = %s
+				""", organizationName)
+
+			uidOrganization = self.session.fetchone()['OrganizationID']
+
+			self.conn.commit()	# Being new transaction
+
 			# Check if student already organization member
 			self.session.execute("""
 				SELECT * FROM MemberOf as mem
-					WHERE mem.`Student_fk` =
-						(SELECT s.`UID` FROM Student as s WHERE s.`SJSUID` = %s)
-					AND mem.`Organization_fk` = 
-						(SELECT o.`OrganizationID` FROM Organization as o WHERE o.`OrganizationName` = %s);
-				""", (studentID, organizationName))
+					WHERE mem.`Student_fk` = %s AND mem.`Organization_fk` = %s;
+				""", (uidStudent, uidOrganization))
 
 			data = self.session.fetchone()
-			
+			self.conn.commit()	# Being new transaction
+
 			if not data:	# Add student to organization 
 				self.session.execute("""
 					INSERT INTO MemberOf (`Student_fk`, `Organization_fk`)
-						VALUES (
-							(SELECT s.`UID` FROM Student as s WHERE s.`SJSUID` = %s),
-							(SELECT o.`OrganizationID` FROM Organization as o WHERE o.`OrganizationName` = %s)
-						);
-					""", (studentID, organizationName))
+						VALUES (%s, %s);
+					""", (uidStudent, uidOrganization))
 
 				self.conn.commit()
 				return True
 
 			else:	# Check if student active(1) member of organization	
-				activeMember = self._isStudentActiveMember(studentID, organizationName)
+				activeMember = self._isStudentActiveMember(uidStudent, uidOrganization)
 
 				if not activeMember : # Update organization member active status to active(1)
-					# 
-					# TODO:
-					# 	member inactive(0) may be result of blacklist. If present, return False
-					# 
+
+					# Inactive status may be a result of being blacklisted
+					blacklisted = self._isStudentBlacklisted(uidStudent, uidOrganization)	
+					if blacklisted:
+						return False
 
 					self.session.execute("""
 						UPDATE MemberOf
 							SET MemberOf.`Active` = '1' 
-							WHERE MemberOf.`Student_fk` = 
-								(SELECT s.`UID` FROM Student as s WHERE s.`SJSUID` = %s)
-							AND MemberOf.`Organization_fk` =
-								(SELECT o.`OrganizationID` FROM Organization as o WHERE o.`OrganizationName` = %s);
-						""", (studentID, organizationName))
+							WHERE MemberOf.`Student_fk` = %s AND MemberOf.`Organization_fk` = %s;
+						""", (uidStudent, uidOrganization))
 									
 					self.conn.commit()
 					return True
@@ -93,18 +102,31 @@ class Student(Database):
 		self.__vStudent_Organization(studentID, organizationName)
 		
 		try:
+			# Get student unique ID
+			self.session.execute("""
+				SELECT s.`UID` FROM Student as s WHERE s.`SJSUID` = %s
+				""", studentID)
+
+			uidStudent = self.session.fetchone()['UID']
+
+			# Get organization unique ID
+			self.session.execute("""
+				SELECT o.`OrganizationID` FROM Organization as o WHERE o.`OrganizationName` = %s
+				""", organizationName)
+
+			uidOrganization = self.session.fetchone()['OrganizationID']
+
+			self.conn.commit()	# Being new transaction
+
 			# Check if student active(1) member of organization
-			activeMember = self._isStudentActiveMember(studentID, organizationName)			
+			activeMember = self._isStudentActiveMember(uidStudent, uidOrganization)			
 		
-			if activeMember: 
+			if activeMember: # Set organization member to inactive
 				self.session.execute("""
 					UPDATE MemberOf
 						SET MemberOf.`Active` = '0' 
-						WHERE MemberOf.`Student_fk` = 
-							(SELECT s.`UID` FROM Student as s WHERE s.`SJSUID` = %s)
-						AND MemberOf.`Organization_fk` =
-							(SELECT o.`OrganizationID` FROM Organization as o WHERE o.`OrganizationName` = %s);
-					""", (studentID, organizationName))
+						WHERE MemberOf.`Student_fk` = %s AND MemberOf.`Organization_fk` = %s;
+					""", (uidStudent, uidOrganization))
 								
 				self.conn.commit()
 				return True
@@ -128,6 +150,11 @@ class Student(Database):
 
 	def commentArticle(self, studentID, studentComment, articleID):
 		try:
+			# 
+			# TODO: 
+			# 	validate studentComment and articleID are good
+			# 
+
 			# NOTE: articleID unique unlike articleName
 			self.session.execute("""
 				SELECT o.`OrganizationName`
@@ -155,18 +182,32 @@ class Student(Database):
 			self.conn.rollback()
 			self._printError("%s", e)
 
-	def _isStudentActiveMember(self, studentID, organizationName):
+	def _isStudentActiveMember(self, uidStudent, uidOrganization):
 		self.session.execute("""
 			SELECT * FROM MemberOf as mem
-				WHERE mem.`Student_fk` =
-					(SELECT s.`UID` FROM Student as s WHERE s.`SJSUID` = %s)
-				AND mem.`Organization_fk` = 
-					(SELECT o.`OrganizationID` FROM Organization as o WHERE o.`OrganizationName` = %s)
+				WHERE mem.`Student_fk` = %s	AND mem.`Organization_fk` = %s
 				AND mem.`Active` = '1';
-			""", (studentID, organizationName))
+
+			""", (uidStudent, uidOrganization))
+
+		self.conn.commit()	# Being new transaction
 
 		active = self.session.fetchone()
 		if active:
+			return True
+
+		return False
+
+	def _isStudentBlacklisted(self, uidStudent, uidOrganization):
+		self.session.execute("""
+			SELECT * FROM TroubleMaker as t
+				WHERE t.`Student_fk` = %s AND t.`Organization_fk` = %s;
+			""", (uidStudent, uidOrganization))
+
+		self.conn.commit()	# Being new transaction
+
+		blacklisted = self.session.fetchone()
+		if blacklisted:
 			return True
 
 		return False
@@ -211,3 +252,7 @@ class Student(Database):
 			print message % args
 		
 		sys.exit(1)
+
+
+s = Student()
+print s.joinOrganization('007810023', 'SCE')
