@@ -1,1 +1,2 @@
-security/config.json
+server-side/security/config.json
+server-side/*.pyc

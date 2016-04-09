@@ -9,7 +9,7 @@
 #
 
 import MySQLdb as mdb 		# _mysql Python wrapper
-from sys import exit
+import sys
 from json import load
 
 class Database(object):
@@ -34,7 +34,7 @@ class Database(object):
 			return cls.__connection 	# Return conn instance
 		
 		except IOError as e:
-			print e
+			print "[ERROR] %s" % e
 
 	@classmethod
 	def getSession(cls):
@@ -55,6 +55,9 @@ class Database(object):
 			conn = mdb.connect(host, user, passwd, cls.__database)
 			cls.__connection = conn
 
+			# Ensure autocommit disabled == Default
+			cls.__connection.autocommit(False)
+
 			# Set data retrieval return type as dictionary
 			cls.__session = conn.cursor(mdb.cursors.DictCursor)
 
@@ -63,8 +66,12 @@ class Database(object):
 			print "[SERVER] Database ver: %s " % ver
 
 		except mdb.Error as e:
-			print "Error %d: %s" % (e.args[0], e.args[1])
-			exit(1)
+			print "[ERROR] %d: %s" % (e.args[0], e.args[1])
+			sys.exit(2)
+
+		except Exception as e:
+			print "[ERROR] %s" % e
+			sys.exit(1)
 
 
 	@classmethod
@@ -76,10 +83,12 @@ class Database(object):
 def main():
 	try:
 		tx = Database()
-		print "[Server] Test connection success"
+		tx.connect()
+		print "[SERVER] Test connection success"
 		tx.close()
+
 	except Exception, e:
-		print e
+		print "[ERROR] %s" % e
 		sys.exit(1)
 
 
