@@ -24,39 +24,21 @@ class Database(object):
 
 	@classmethod
 	def connect(cls):
+		if cls.__session is not None:
+			# Prevent mulitple instance of connection
+			return 
+		
 		try:
 			with open('security/config.json', 'r') as f:
 				cfg = load(f)["mysql"]		# Access credentials
 			
-			cls.__connect(cfg['host'], cfg['user'], cfg['passwd'], cfg['db'])	
-			f.close()
-
-			return cls.__connection 	# Return conn instance
-		
-		except IOError as e:
-			print "[ERROR] %s" % e
-
-	@classmethod
-	def getSession(cls):
-		return cls.__session
-
-	@classmethod
-	def __connect(cls, host='', user='', passwd='', database=''):
-		if cls.__session is not None:
-			# Prevent mulitple instance of connection
-			return 
-
-		cls.__database = database
-
-		try:
-			if not cls.__database:
+			cls.__database = cfg['db']
+			if not cls.__database:	# Check if empty string DB
 				raise NameError('Unspecified database');
 
-			conn = mdb.connect(host, user, passwd, cls.__database)
+			conn = cls.__connect(cfg['host'], cfg['user'], cfg['passwd'], cfg['db'])	
 			cls.__connection = conn
-
-			# Ensure autocommit disabled == Default
-			cls.__connection.autocommit(False)
+			f.close()	# Close file
 
 			# Set data retrieval return type as dictionary
 			cls.__session = conn.cursor(mdb.cursors.DictCursor)
@@ -65,9 +47,29 @@ class Database(object):
 			ver = cls.__session.fetchone()
 			print "[SERVER] Database ver: %s " % ver
 
+			return cls.__connection 	# Return conn instance
+
 		except mdb.Error as e:
 			print "[ERROR] %d: %s" % (e.args[0], e.args[1])
 			sys.exit(2)
+		
+		except (Exception, IOError) as e:
+			print "[ERROR] %s" % e
+			sys.exit(1)
+
+	@classmethod
+	def getSession(cls):
+		return cls.__session
+
+	@staticmethod
+	def __connect(host, user, passwd, database):
+		try:
+			conn = mdb.connect(host, user, passwd, database)
+
+			# Ensure autocommit disabled == Default
+			conn.autocommit(False)
+
+			return conn
 
 		except Exception as e:
 			print "[ERROR] %s" % e
