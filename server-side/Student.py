@@ -14,7 +14,7 @@ class Student(Database):
 	Student provides all methods a regular user can initiate.
 	This class is to be inherited by higher ranking students.
 	"""
-
+	
 	def __init__(self):
 		self.conn = super(Student, self).connect()
 		self.session = super(Student, self).getSession()
@@ -150,37 +150,77 @@ class Student(Database):
 
 	def commentArticle(self, studentID, studentComment, articleID):
 		try:
-			# 
-			# TODO: 
-			# 	validate studentComment and articleID are good
-			# 
+			schema = {
+				'SJSUID': {
+					'required': True,
+					'type': 'string',
+					'maxlength': 9,
+					'minlength': 9
+				},
+				'Comment': {
+					'required': True,
+					'type': 'string',
+					'maxlength': 200,
+					'minlength': 2
+				},
+				'articleID': {
+					'required': True,
+					'type': 'string'
+				}
+			}
+			
+			v = Validator()
+			validStatus = v.validate({
+					'SJSUID': studentID,
+					'Comment': studentComment,
+					'articleID': articleID
+				}, schema)
 
-			# NOTE: articleID unique unlike articleName
+			if not validStatus:		# Status contains False if failed to meet rules
+				raise ValidatorException(v.errors)
+
+			# Get student unique ID
 			self.session.execute("""
-				SELECT o.`OrganizationName`
-					FROM Organization as o WHERE o.`OrganizationID` =   
-					(SELECT nfa.`OrganizationID` FROM NewsfeedArticle as nfa WHERE nfa.`ArticleID` = %s);
+				SELECT s.`UID` FROM Student as s WHERE s.`SJSUID` = %s
+				""", studentID)
+
+			uidStudent = self.session.fetchone()['UID']
+
+			# Get organization unique id
+			self.session.execute("""
+				SELECT nfa.`OrganizationID`
+					FROM NewsfeedArticle as nfa WHERE nfa.`ArticleID` = %s;
 				""", articleID)
 
 			# Verify that student is active member
-			orgName = self.session.fetchone()['OrganizationName']
-			active = self._isStudentActiveMember(studentID, orgName)
+			orgID = self.session.fetchone()['OrganizationID']
+			active = self._isStudentActiveMember(uidStudent, orgID)
 
 			if active:	# Only active members can comment
 				self.session.execute("""
 					INSERT INTO Comment (`Article_fk`, `Author_fk`, `Content`)
-						VALUES (%s, 
-							(SELECT s.`UID` FROM Student as s WHERE s.`SJSUID` = %s), %s);
-					""", (articleID, studentID, studentComment))
+						VALUES (%s, %s, %s);
+					""", (articleID, uidStudent, studentComment))
 
 				self.conn.commit()
 				return True
 
 			return False
 
-		except Exception as e:
+		except (ValidatorException, Exception) as e:
 			self.conn.rollback()
-			self._printError("%s", e)
+			
+			if isinstance(e, ValidatorException):
+				self._printWarning("ValidatorException %s", e)
+				
+				# 
+				# TODO:
+				# 	return to frontend high priority validation errors
+				#
+				return e
+
+			else:
+				self._printError("%s", e)
 
 	def _isStudentActiveMember(self, uidStudent, uidOrganization):
 		self.session.execute("""
@@ -215,10 +255,11 @@ class Student(Database):
 	@staticmethod
 	def __vStudent_Organization(studentID, organizationName):
 		schema = {
-			'SJSU': {
+			'SJSUID': {
 				'required': True,
 				'type': 'string',
-				'maxlength': 9
+				'maxlength': 9,
+				'minlength': 9
 			},
 			'OrganizationName': {
 				'required': True,
@@ -230,7 +271,7 @@ class Student(Database):
 
 		v = Validator()	
 		validStatus = v.validate({
-				'SJSU': studentID,
+				'SJSUID': studentID,
 				'OrganizationName': organizationName
 			}, schema)
 
@@ -252,7 +293,3 @@ class Student(Database):
 			print message % args
 		
 		sys.exit(1)
-
-
-s = Student()
-print s.joinOrganization('007810023', 'SCE')
