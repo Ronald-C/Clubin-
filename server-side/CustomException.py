@@ -1,6 +1,11 @@
 # Custom Exception class for Validator module
 
 class ValidatorException(Exception):
+	""" A custom Exception class for validation
+
+	Validation against a schema may return multiple validation errors
+	that have to be sorted, where only high priority ones are kept.
+	"""
 
 	def __init__(self, *args):
 		errList = []
@@ -16,7 +21,7 @@ class ValidatorException(Exception):
 		# 
 		# TODO:
 		# 	Multiple errors may be returned for one rule 
-		# 	Parse args list and return priority arguments only, ignoring all else
+		# 	Parse args list and return list of high priority arguments only, ignoring all else
 		# 
 
 		self.args = errList

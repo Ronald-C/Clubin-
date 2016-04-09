@@ -13,6 +13,12 @@ import sys
 from json import load
 
 class Database(object):
+	""" MySQL database connection class
+
+	Handles all connection/cursor instances to database. As a minimal project, class
+	only instances a single shared connection. Implementing pooled connections is possible
+	by refactoring this class a minimal impact to other modules that require Database class
+	"""
 
 	__database		= None	
 	__connection 	= None
