@@ -197,7 +197,20 @@ class Student(Database):
 				else:
 					interestID = interestID['InterestID']
 
-				values.append((uidStudent, interestID))
+				# If duplicate entry exists, do not insert again else SQL IntegrityError
+				self.session.execute("""
+					SELECT * FROM StudentInterest as si
+						WHERE si.`Student_fk` = %s AND si.`Interest_fk` = %s;
+					""", (uidStudent, interestID))
+
+				duplicate = self.session.fetchall()
+				if not duplicate:
+					values.append((uidStudent, interestID))
+				
+				else:	# Go on to next loop iteration
+					continue
+
+			self.conn.commit()	# Start a new transaction
 
 			# Add all student's interest at once
 			self.session.executemany("""
@@ -224,8 +237,59 @@ class Student(Database):
 			self.conn.rollback()
 			self._printError("%s", e)
 
-	def removeInterest(self, studentID, *interest):
-		pass
+	def removeInterest(self, studentID, *interests):
+		try:
+			# Validate method arguments
+			Validate({
+				'SJSUID': studentID
+			})
+
+			uidStudent = self.__getStudentUID(studentID)
+
+			values = []
+			# Build list of (studentID, InterestID)
+			for interest in interests:
+				#  Get interest unique id
+				self.session.execute("""
+					SELECT i.`InterestID`
+						FROM Interest as i WHERE i.`Title` = %s;
+					""", interest)
+
+				interestID = self.session.fetchone()
+
+				if not interestID:	# No interestID found == Unknown interestName
+					raise TypeError("Unknown interest")
+				else:
+					interestID = interestID['InterestID']
+
+				values.append((uidStudent, interestID))
+
+				# Delete rows with (studentID, interestID)
+				# NOTE: DELETE will have no action if not found
+				self.session.executemany("""
+					DELETE FROM StudentInterest 
+						WHERE StudentInterest.`Student_fk` = %s
+						AND StudentInterest.`Interest_fk` = %s;
+					""", values)
+
+				self.conn.commit()
+				return True
+
+		except (TypeError, ValidatorException) as e:
+			self.conn.rollback()
+			# Unknown interest name. No InterestID returned
+			self._printWarning("%s", e)
+ 
+			#
+			# TODO:
+			#	return message to frontend of unknown interestName not foun
+			#	return to frontend high priority validation errors
+			# 
+			return e
+
+		except (ValidatorException, Exception) as e:
+			self.conn.rollback()
+			self._printError("%s", e)
 
 	def commentArticle(self, studentID, studentComment, articleID):
 		try:
@@ -238,7 +302,7 @@ class Student(Database):
 
 			uidStudent = self.__getStudentUID(studentID)
 
-			# Get organization unique id
+			# Get organization unique id indirectly from article
 			self.session.execute("""
 				SELECT nfa.`OrganizationID`
 					FROM NewsfeedArticle as nfa WHERE nfa.`ArticleID` = %s;
@@ -321,7 +385,8 @@ class Student(Database):
 			raise TypeError("Unknown studentID")
 
 		else:
-			return uidStudent = uidStudent['UID']
+			uidStudent = uidStudent['UID']
+			return uidStudent
 
 	@staticmethod
 	def _printWarning(message, *args):
@@ -336,4 +401,3 @@ class Student(Database):
 		# Print traceback if debugging ON
 		if 'DEBUG' in globals() and DEBUG:
 			print traceback.format_exc()
-

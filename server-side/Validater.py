@@ -5,7 +5,7 @@ from cerberus import Validator
 from CustomException import *
 
 class Validate(object):
-	""" Validation class using cerberus
+	""" Validation class using cerberus 
 	
 	Takes json structured inputs to validate, raising errors if any
 	A non-return indicates everything is valid
