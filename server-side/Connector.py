@@ -37,6 +37,7 @@ class Database(object):
 		try:
 			with open('security/config.json', 'r') as f:
 				cfg = load(f)["mysql"]		# Access credentials
+				cls.configFile = f 		# Save file instance
 			
 			cls.__database = cfg['db']
 			if not cls.__database:	# Check if empty string DB
@@ -44,7 +45,6 @@ class Database(object):
 
 			conn = cls.__connect(cfg['host'], cfg['user'], cfg['passwd'], cfg['db'])	
 			cls.__connection = conn
-			f.close()	# Close file
 
 			# Set data retrieval return type as dictionary
 			cls.__session = conn.cursor(mdb.cursors.DictCursor)
@@ -59,9 +59,13 @@ class Database(object):
 			print "[ERROR] %d: %s" % (e.args[0], e.args[1])
 			sys.exit(2)
 		
-		except (Exception, IOError) as e:
+		except Exception as e:
 			print "[ERROR] %s" % e
 			sys.exit(1)
+
+		finally:
+			# Close file even if exception raised
+			cls.configFile.close()	
 
 	@classmethod
 	def getSession(cls):
