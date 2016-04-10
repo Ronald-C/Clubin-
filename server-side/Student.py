@@ -1,6 +1,7 @@
 # Student entity
 
 import sys
+import traceback
 
 from Connector import Database
 from Validater import *
@@ -39,6 +40,7 @@ class Student(Database):
 				SELECT o.`OrganizationID` FROM Organization as o WHERE o.`OrganizationName` = %s
 				""", organizationName)
 
+			# Will raise TypeError if unknown organizationName
 			uidOrganization = self.session.fetchone()['OrganizationID']
 
 			self.conn.commit()	# Being new transaction
@@ -120,6 +122,7 @@ class Student(Database):
 				SELECT o.`OrganizationID` FROM Organization as o WHERE o.`OrganizationName` = %s
 				""", organizationName)
 
+			# Will raise TypeError if unknown organizationName
 			uidOrganization = self.session.fetchone()['OrganizationID']
 
 			self.conn.commit()	# Being new transaction
@@ -250,8 +253,4 @@ class Student(Database):
 	def _printError(message, *args):
 		global DEBUG
 		if 'DEBUG' in globals() and DEBUG:
-			message = "[ERROR] " + str(message)
-			print message % args
-		
-		sys.exit(1)
-
+			print traceback.format_exc()
