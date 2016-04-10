@@ -3,7 +3,7 @@
 import sys
 
 from Connector import Database
-from Validate import *
+from Validater import *
 
 DEBUG = True 	# Set this variable for console print
 
