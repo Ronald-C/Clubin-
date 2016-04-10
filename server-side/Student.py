@@ -120,16 +120,7 @@ class Student(Database):
 				'OrganizationName': organizationName
 			})
 
-			# Get student unique ID
-			self.session.execute("""
-				SELECT s.`UID` FROM Student as s WHERE s.`SJSUID` = %s
-				""", studentID)
-
-			uidStudent = self.session.fetchone()
-			if not uidStudent:
-				raise TypeError("Unknown studentID")
-			else:
-				uidStudent = uidStudent['UID']
+			uidStudent = self.__getStudentUID(studentID)
 
 			# Get organization unique ID
 			self.session.execute("""
@@ -188,16 +179,7 @@ class Student(Database):
 				'SJSUID': studentID
 			})
 
-			# Get student unique ID
-			self.session.execute("""
-				SELECT s.`UID` FROM Student as s WHERE s.`SJSUID` = %s
-				""", studentID)
-
-			uidStudent = self.session.fetchone()
-			if not uidStudent:
-				raise TypeError("Unknown studentID")
-			else:
-				uidStudent = uidStudent['UID']
+			uidStudent = self.__getStudentUID(studentID)
 
 			values = []
 			# Build list of (studentID, InterestID)
@@ -242,7 +224,7 @@ class Student(Database):
 			self.conn.rollback()
 			self._printError("%s", e)
 
-	def removeInterest(self):
+	def removeInterest(self, studentID, *interest):
 		pass
 
 	def commentArticle(self, studentID, studentComment, articleID):
@@ -254,16 +236,7 @@ class Student(Database):
 				'ArticleID': articleID
 			})
 
-			# Get student unique ID
-			self.session.execute("""
-				SELECT s.`UID` FROM Student as s WHERE s.`SJSUID` = %s
-				""", studentID)
-
-			uidStudent = self.session.fetchone()
-			if not uidStudent:
-				raise TypeError("Unknown studentID")
-			else:
-				uidStudent = uidStudent['UID']
+			uidStudent = self.__getStudentUID(studentID)
 
 			# Get organization unique id
 			self.session.execute("""
@@ -336,6 +309,19 @@ class Student(Database):
 			return True
 
 		return False
+
+	def __getStudentUID(self, studentID):
+		# Get student unique ID
+		self.session.execute("""
+			SELECT s.`UID` FROM Student as s WHERE s.`SJSUID` = %s
+			""", studentID)
+
+		uidStudent = self.session.fetchone()
+		if not uidStudent:
+			raise TypeError("Unknown studentID")
+
+		else:
+			return uidStudent = uidStudent['UID']
 
 	@staticmethod
 	def _printWarning(message, *args):
