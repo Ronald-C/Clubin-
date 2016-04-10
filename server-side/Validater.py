@@ -82,4 +82,4 @@ class Validate(object):
 		validStatus = self.v.validate(document, schema)
 
 		if not validStatus:		# Status contains False if failed to meet rules
-			raise ValidatorException(self.v.errors)
+			raise ValidatorException({'ValidatorException': self.v.errors})

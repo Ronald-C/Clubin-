@@ -33,15 +33,22 @@ class Student(Database):
 				SELECT s.`UID` FROM Student as s WHERE s.`SJSUID` = %s
 				""", studentID)
 
-			uidStudent = self.session.fetchone()['UID']
+			uidStudent = self.session.fetchone()
+			if not uidStudent:
+				raise TypeError("Unknown studentID")
+			else:
+				uidStudent = uidStudent['UID']
 
 			# Get organization unique ID
 			self.session.execute("""
 				SELECT o.`OrganizationID` FROM Organization as o WHERE o.`OrganizationName` = %s
 				""", organizationName)
 
-			# Will raise TypeError if unknown organizationName
-			uidOrganization = self.session.fetchone()['OrganizationID']
+			uidOrganization = self.session.fetchone()
+			if not uidOrganization:
+				raise TypeError("Unknown organizationName")
+			else:
+				uidOrganization = uidOrganization['OrganizationID']
 
 			self.conn.commit()	# Being new transaction
 
@@ -87,20 +94,23 @@ class Student(Database):
 
 			return False
 
-		except (ValidatorException, Exception) as e:
+		except (TypeError, ValidatorException) as e:
+			self.conn.rollback()
+			# Unknown studentID or organizationName was encountered
+			self._printWarning("%s", e)
+ 
+			#
+			# TODO:
+			#	return message to frontend of error
+			#	return to frontend high priority validation errors
+			# 
+			return e
+
+		except Exception as e:
 			self.conn.rollback()
 			
-			if isinstance(e, ValidatorException):
-				self._printWarning("ValidatorException %s", e)
-				
-				# 
-				# TODO:
-				# 	return to frontend high priority validation errors
-				#
-				return e
-
-			else:	# A non-existing organization was specified!!!
-				self._printError("%s", e)
+			# A non-existing organization was specified!!!
+			self._printError("%s", e)
 
 	def quitOrganization(self, studentID, organizationName):
 		try:
@@ -115,7 +125,11 @@ class Student(Database):
 				SELECT s.`UID` FROM Student as s WHERE s.`SJSUID` = %s
 				""", studentID)
 
-			uidStudent = self.session.fetchone()['UID']
+			uidStudent = self.session.fetchone()
+			if not uidStudent:
+				raise TypeError("Unknown studentID")
+			else:
+				uidStudent = uidStudent['UID']
 
 			# Get organization unique ID
 			self.session.execute("""
@@ -123,7 +137,11 @@ class Student(Database):
 				""", organizationName)
 
 			# Will raise TypeError if unknown organizationName
-			uidOrganization = self.session.fetchone()['OrganizationID']
+			uidOrganization = self.session.fetchone()
+			if not uidOrganization:
+				raise TypeError("Unknown organizationName")
+			else:
+				uidOrganization = uidOrganization['OrganizationID']
 
 			self.conn.commit()	# Being new transaction
 
@@ -145,20 +163,87 @@ class Student(Database):
 
 			return False
 
-		except (ValidatorException, Exception) as e:
+		except (TypeError, ValidatorException) as e:
+			self.conn.rollback()
+			# Unknown interest name. No InterestID returned
+			self._printWarning("%s", e)
+ 
+			#
+			# TODO:
+			#	return message to frontend of unknown interestName not foun
+			#	return to frontend high priority validation errors
+			# 
+			return e
+
+		except Exception as e:
 			self.conn.rollback()
 			
-			if isinstance(e, ValidatorException):
-				self._printWarning("ValidatorException %s", e)
-				
-				# 
-				# TODO:
-				# 	return to frontend high priority validation errors
-				#
-				return e
+			# A non-existing organization was specified!!!
+			self._printError("%s", e)
 
-			else:	# A non-existing organization was specified!!!
-				self._printError("%s", e)
+	def addInterest(self, studentID, *interests):
+		try:
+			# Validate method arguments
+			Validate({
+				'SJSUID': studentID
+			})
+
+			# Get student unique ID
+			self.session.execute("""
+				SELECT s.`UID` FROM Student as s WHERE s.`SJSUID` = %s
+				""", studentID)
+
+			uidStudent = self.session.fetchone()
+			if not uidStudent:
+				raise TypeError("Unknown studentID")
+			else:
+				uidStudent = uidStudent['UID']
+
+			values = []
+			# Build list of (studentID, InterestID)
+			for interest in interests:
+				#  Get interest unique id
+				self.session.execute("""
+					SELECT i.`InterestID`
+						FROM Interest as i WHERE i.`Title` = %s;
+					""", interest)
+
+				interestID = self.session.fetchone()
+
+				if not interestID:	# No interestID found == Unknown interestName
+					raise TypeError("Unknown interest")
+				else:
+					interestID = interestID['InterestID']
+
+				values.append((uidStudent, interestID))
+
+			# Add all student's interest at once
+			self.session.executemany("""
+				INSERT INTO StudentInterest (`Student_fk`, `Interest_fk`)
+					VALUES (%s, %s)
+				""", values)
+
+			self.conn.commit()
+			return True
+
+		except (TypeError, ValidatorException) as e:
+			self.conn.rollback()
+			# Unknown interest name. No InterestID returned
+			self._printWarning("%s", e)
+ 
+			#
+			# TODO:
+			#	return message to frontend of unknown interestName not foun
+			#	return to frontend high priority validation errors
+			# 
+			return e
+
+		except (ValidatorException, Exception) as e:
+			self.conn.rollback()
+			self._printError("%s", e)
+
+	def removeInterest(self):
+		pass
 
 	def commentArticle(self, studentID, studentComment, articleID):
 		try:
@@ -174,7 +259,11 @@ class Student(Database):
 				SELECT s.`UID` FROM Student as s WHERE s.`SJSUID` = %s
 				""", studentID)
 
-			uidStudent = self.session.fetchone()['UID']
+			uidStudent = self.session.fetchone()
+			if not uidStudent:
+				raise TypeError("Unknown studentID")
+			else:
+				uidStudent = uidStudent['UID']
 
 			# Get organization unique id
 			self.session.execute("""
@@ -182,8 +271,13 @@ class Student(Database):
 					FROM NewsfeedArticle as nfa WHERE nfa.`ArticleID` = %s;
 				""", articleID)
 
+			orgID = self.session.fetchone()
+			if not orgID:
+				raise TypeError("Unknown articleID")
+			else:
+				orgID = orgID['OrganizationID']
+
 			# Verify that student is active member
-			orgID = self.session.fetchone()['OrganizationID']
 			active = self._isStudentActiveMember(uidStudent, orgID)
 
 			if active:	# Only active members can comment
@@ -197,20 +291,21 @@ class Student(Database):
 
 			return False
 
+		except (TypeError, ValidatorException) as e:
+			self.conn.rollback()
+			# Unknown studentID or articleID returned
+			self._printWarning("%s", e)
+ 
+			#
+			# TODO:
+			#	return message to frontend of unknown studentID and articleID
+			#	return to frontend high priority validation errors
+			# 
+			return e
+
 		except (ValidatorException, Exception) as e:
 			self.conn.rollback()
-			
-			if isinstance(e, ValidatorException):
-				self._printWarning("ValidatorException %s", e)
-				
-				# 
-				# TODO:
-				# 	return to frontend high priority validation errors
-				#
-				return e
-
-			else:
-				self._printError("%s", e)
+			self._printError("%s", e)
 
 	def _isStudentActiveMember(self, uidStudent, uidOrganization):
 		self.session.execute("""
@@ -252,5 +347,7 @@ class Student(Database):
 	@staticmethod
 	def _printError(message, *args):
 		global DEBUG
+		# Print traceback if debugging ON
 		if 'DEBUG' in globals() and DEBUG:
 			print traceback.format_exc()
+
