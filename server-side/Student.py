@@ -1,10 +1,9 @@
 # Student entity
 
-from cerberus import Validator
 import sys
 
 from Connector import Database
-from CustomException import *
+from Validate import *
 
 DEBUG = True 	# Set this variable for console print
 
@@ -14,15 +13,19 @@ class Student(Database):
 	Student provides all methods a regular user can initiate.
 	This class is to be inherited by higher ranking students.
 	"""
-	
+
 	def __init__(self):
+		super(Student, self).__init__()
 		self.conn = super(Student, self).connect()
 		self.session = super(Student, self).getSession()
 
 	def joinOrganization(self, studentID, organizationName):
 		try:
 			# Validate method arguments
-			self.__vStudent_Organization(studentID, organizationName)
+			Validate({
+				'SJSUID': studentID,
+				'OrganizationName': organizationName
+			})
 
 			# Get student unique ID
 			self.session.execute("""
@@ -94,14 +97,17 @@ class Student(Database):
 				#
 				return e
 
-			else:
+			else:	# A non-existing organization was specified!!!
 				self._printError("%s", e)
 
 	def quitOrganization(self, studentID, organizationName):
-		# Validate method arguments
-		self.__vStudent_Organization(studentID, organizationName)
-		
 		try:
+			# Validate method arguments
+			Validate({
+				'SJSUID': studentID,
+				'OrganizationName': organizationName
+			})
+
 			# Get student unique ID
 			self.session.execute("""
 				SELECT s.`UID` FROM Student as s WHERE s.`SJSUID` = %s
@@ -131,6 +137,9 @@ class Student(Database):
 				self.conn.commit()
 				return True
 
+			else:	# Empty SQL return means either non-member or inactive
+				self._printWarning("%s either inactive or not part of %s", studentID, organizationName)
+
 			return False
 
 		except (ValidatorException, Exception) as e:
@@ -145,39 +154,17 @@ class Student(Database):
 				#
 				return e
 
-			else:
+			else:	# A non-existing organization was specified!!!
 				self._printError("%s", e)
 
 	def commentArticle(self, studentID, studentComment, articleID):
 		try:
-			schema = {
-				'SJSUID': {
-					'required': True,
-					'type': 'string',
-					'maxlength': 9,
-					'minlength': 9
-				},
-				'Comment': {
-					'required': True,
-					'type': 'string',
-					'maxlength': 200,
-					'minlength': 2
-				},
-				'articleID': {
-					'required': True,
-					'type': 'string'
-				}
-			}
-			
-			v = Validator()
-			validStatus = v.validate({
-					'SJSUID': studentID,
-					'Comment': studentComment,
-					'articleID': articleID
-				}, schema)
-
-			if not validStatus:		# Status contains False if failed to meet rules
-				raise ValidatorException(v.errors)
+			# Validate method arguments
+			Validate({
+				'SJSUID': studentID,
+				'OrganizationName': organizationName,
+				'ArticleID': articleID
+			})
 
 			# Get student unique ID
 			self.session.execute("""
@@ -251,32 +238,6 @@ class Student(Database):
 			return True
 
 		return False
-
-	@staticmethod
-	def __vStudent_Organization(studentID, organizationName):
-		schema = {
-			'SJSUID': {
-				'required': True,
-				'type': 'string',
-				'maxlength': 9,
-				'minlength': 9
-			},
-			'OrganizationName': {
-				'required': True,
-				'type': 'string',
-				'minlength': 3,
-				'maxlength': 45
-			}
-		}
-
-		v = Validator()	
-		validStatus = v.validate({
-				'SJSUID': studentID,
-				'OrganizationName': organizationName
-			}, schema)
-
-		if not validStatus:		# Status contains False if failed to meet rules
-			raise ValidatorException(v.errors)
 
 	@staticmethod
 	def _printWarning(message, *args):
