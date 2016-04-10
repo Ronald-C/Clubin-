@@ -162,7 +162,7 @@ class Student(Database):
 			# Validate method arguments
 			Validate({
 				'SJSUID': studentID,
-				'OrganizationName': organizationName,
+				'StudentComment': studentComment,
 				'ArticleID': articleID
 			})
 
@@ -254,3 +254,4 @@ class Student(Database):
 			print message % args
 		
 		sys.exit(1)
+

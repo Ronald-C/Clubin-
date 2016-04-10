@@ -29,8 +29,17 @@ class Validate(object):
 		}
 	}
 
+	StudentComment = {
+		'StudentComment': {
+			'required': True,
+			'type': 'string',
+			'minlength': 2,
+			'maxlength': 200
+		}
+	}
+
 	ArticleID = {
-		'articleID': {
+		'ArticleID': {
 			'required': True,
 			'type': 'string'
 		}
@@ -59,6 +68,9 @@ class Validate(object):
 			elif key is 'ArticleID':
 				schema['ArticleID'] = Validate.ArticleID['ArticleID']
 
+			elif key is 'StudentComment':
+				schema['StudentComment'] = Validate.StudentComment['StudentComment']
+				
 			# 
 			# NOTE:
 			# 	ADD HERE, if extending rules schema
