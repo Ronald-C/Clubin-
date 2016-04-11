@@ -29,26 +29,10 @@ class Student(Database):
 			})
 
 			# Get student unique ID
-			self.session.execute("""
-				SELECT s.`UID` FROM Student as s WHERE s.`SJSUID` = %s
-				""", studentID)
-
-			uidStudent = self.session.fetchone()
-			if not uidStudent:
-				raise TypeError("Unknown studentID")
-			else:
-				uidStudent = uidStudent['UID']
+			uidStudent = self.__getStudentUID(studentID)
 
 			# Get organization unique ID
-			self.session.execute("""
-				SELECT o.`OrganizationID` FROM Organization as o WHERE o.`OrganizationName` = %s
-				""", organizationName)
-
-			uidOrganization = self.session.fetchone()
-			if not uidOrganization:
-				raise TypeError("Unknown organizationName")
-			else:
-				uidOrganization = uidOrganization['OrganizationID']
+			uidOrganization = self.__getOrganizationUID(organizationName)
 
 			self.conn.commit()	# Being new transaction
 
@@ -123,16 +107,7 @@ class Student(Database):
 			uidStudent = self.__getStudentUID(studentID)
 
 			# Get organization unique ID
-			self.session.execute("""
-				SELECT o.`OrganizationID` FROM Organization as o WHERE o.`OrganizationName` = %s
-				""", organizationName)
-
-			# Will raise TypeError if unknown organizationName
-			uidOrganization = self.session.fetchone()
-			if not uidOrganization:
-				raise TypeError("Unknown organizationName")
-			else:
-				uidOrganization = uidOrganization['OrganizationID']
+			uidOrganization = self.__getOrganizationUID(organizationName)
 
 			self.conn.commit()	# Being new transaction
 
@@ -344,6 +319,9 @@ class Student(Database):
 			self.conn.rollback()
 			self._printError("%s", e)
 
+	def editPersonalInfo(self, studentID, **kwargs):
+		pass
+
 	def _isStudentActiveMember(self, uidStudent, uidOrganization):
 		self.session.execute("""
 			SELECT * FROM MemberOf as mem
@@ -387,6 +365,20 @@ class Student(Database):
 		else:
 			uidStudent = uidStudent['UID']
 			return uidStudent
+
+	def __getOrganizationUID(self, organizationName):
+		# Get organization unique ID
+		self.session.execute("""
+			SELECT o.`OrganizationID` FROM Organization as o WHERE o.`OrganizationName` = %s
+			""", organizationName)
+
+		uidOrganization = self.session.fetchone()
+		if not uidOrganization:
+			raise TypeError("Unknown organizationName")
+		
+		else:
+			uidOrganization = uidOrganization['OrganizationID']
+			return uidOrganization
 
 	@staticmethod
 	def _printWarning(message, *args):
