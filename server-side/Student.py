@@ -1,6 +1,5 @@
 # Student entity
 
-import sys
 import traceback
 
 from Connector import Database
@@ -75,8 +74,9 @@ class Student(Database):
 
 				else:	# Organization member already active	
 					self._printWarning("%s in %s already active", studentID, organizationName)
+					return True
 
-			return False
+			return False 	# 99.99% chance you will not hit this !!!
 
 		except (TypeError, ValidatorException) as e:
 			self.conn.rollback()
@@ -126,8 +126,9 @@ class Student(Database):
 
 			else:	# Empty SQL return means either non-member or inactive
 				self._printWarning("%s either inactive or not part of %s", studentID, organizationName)
+				return True
 
-			return False
+			return False 	# 99.99% chance you will not hit this !!!
 
 		except (TypeError, ValidatorException) as e:
 			self.conn.rollback()
@@ -187,14 +188,18 @@ class Student(Database):
 
 			self.conn.commit()	# Start a new transaction
 
-			# Add all student's interest at once
-			self.session.executemany("""
-				INSERT INTO StudentInterest (`Student_fk`, `Interest_fk`)
-					VALUES (%s, %s)
-				""", values)
+			# Return false if no values to insert into DB
+			if values:
+				# Add all student's interest at once
+				self.session.executemany("""
+					INSERT INTO StudentInterest (`Student_fk`, `Interest_fk`)
+						VALUES (%s, %s)
+					""", values)
 
-			self.conn.commit()
-			return True
+				self.conn.commit()
+				return True
+
+			return False
 
 		except (TypeError, ValidatorException) as e:
 			self.conn.rollback()
@@ -239,16 +244,20 @@ class Student(Database):
 
 				values.append((uidStudent, interestID))
 
-				# Delete rows with (studentID, interestID)
-				# NOTE: DELETE will have no action if not found
-				self.session.executemany("""
-					DELETE FROM StudentInterest 
-						WHERE StudentInterest.`Student_fk` = %s
-						AND StudentInterest.`Interest_fk` = %s;
-					""", values)
+				# Return false if no values to enter into DB
+				if values:
+					# Delete rows with (studentID, interestID)
+					# NOTE: DELETE will have no action if not found
+					self.session.executemany("""
+						DELETE FROM StudentInterest 
+							WHERE StudentInterest.`Student_fk` = %s
+							AND StudentInterest.`Interest_fk` = %s;
+						""", values)
 
-				self.conn.commit()
-				return True
+					self.conn.commit()
+					return True
+
+				return False
 
 		except (TypeError, ValidatorException) as e:
 			self.conn.rollback()
@@ -364,7 +373,7 @@ class Student(Database):
 
 		else:
 			uidStudent = uidStudent['UID']
-			return uidStudent
+			return str(uidStudent)
 
 	def __getOrganizationUID(self, organizationName):
 		# Get organization unique ID
@@ -378,7 +387,7 @@ class Student(Database):
 		
 		else:
 			uidOrganization = uidOrganization['OrganizationID']
-			return uidOrganization
+			return str(uidOrganization)
 
 	@staticmethod
 	def _printWarning(message, *args):
