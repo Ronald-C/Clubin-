@@ -16,6 +16,7 @@ class Student(Database):
 
 	def __init__(self):
 		super(Student, self).__init__()
+		# Get connection & cursor from Database
 		self.conn = super(Student, self).connect()
 		self.session = super(Student, self).getSession()
 
@@ -28,7 +29,7 @@ class Student(Database):
 			})
 
 			# Get student unique ID
-			uidStudent = self.__getStudentUID(studentID)
+			uidStudent = self._getStudentUID(studentID)
 
 			# Get organization unique ID
 			uidOrganization = self.__getOrganizationUID(organizationName)
@@ -104,7 +105,7 @@ class Student(Database):
 				'OrganizationName': organizationName
 			})
 
-			uidStudent = self.__getStudentUID(studentID)
+			uidStudent = self._getStudentUID(studentID)
 
 			# Get organization unique ID
 			uidOrganization = self.__getOrganizationUID(organizationName)
@@ -155,7 +156,7 @@ class Student(Database):
 				'SJSUID': studentID
 			})
 
-			uidStudent = self.__getStudentUID(studentID)
+			uidStudent = self._getStudentUID(studentID)
 
 			values = []
 			# Build list of (studentID, InterestID)
@@ -224,7 +225,7 @@ class Student(Database):
 				'SJSUID': studentID
 			})
 
-			uidStudent = self.__getStudentUID(studentID)
+			uidStudent = self._getStudentUID(studentID)
 
 			values = []
 			# Build list of (studentID, InterestID)
@@ -281,10 +282,9 @@ class Student(Database):
 			Validate({
 				'SJSUID': studentID,
 				'StudentComment': studentComment,
-				'ArticleID': articleID
 			})
 
-			uidStudent = self.__getStudentUID(studentID)
+			uidStudent = self._getStudentUID(studentID)
 
 			# Get organization unique id indirectly from article
 			self.session.execute("""
