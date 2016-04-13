@@ -15,7 +15,7 @@ class Student(Database):
 	"""
 
 	def __init__(self):
-		super(Student, self).__init__()
+		# super(Student, self).__init__()
 		# Get connection & cursor from Database
 		self.conn = super(Student, self).connect()
 		self.session = super(Student, self).getSession()
@@ -32,7 +32,7 @@ class Student(Database):
 			uidStudent = self._getStudentUID(studentID)
 
 			# Get organization unique ID
-			uidOrganization = self.__getOrganizationUID(organizationName)
+			uidOrganization = self._getOrganizationUID(organizationName)
 
 			self.conn.commit()	# Being new transaction
 
@@ -108,7 +108,7 @@ class Student(Database):
 			uidStudent = self._getStudentUID(studentID)
 
 			# Get organization unique ID
-			uidOrganization = self.__getOrganizationUID(organizationName)
+			uidOrganization = self._getOrganizationUID(organizationName)
 
 			self.conn.commit()	# Being new transaction
 
@@ -361,7 +361,7 @@ class Student(Database):
 
 		return False
 
-	def __getStudentUID(self, studentID):
+	def _getStudentUID(self, studentID):
 		# Get student unique ID
 		self.session.execute("""
 			SELECT s.`UID` FROM Student as s WHERE s.`SJSUID` = %s
@@ -375,7 +375,7 @@ class Student(Database):
 			uidStudent = uidStudent['UID']
 			return str(uidStudent)
 
-	def __getOrganizationUID(self, organizationName):
+	def _getOrganizationUID(self, organizationName):
 		# Get organization unique ID
 		self.session.execute("""
 			SELECT o.`OrganizationID` FROM Organization as o WHERE o.`OrganizationName` = %s
