@@ -22,7 +22,6 @@
 							<nav id="nav">
 								<ul>
 									<li class="current"><a href="index.html">Home</a></li>
-									<li><a href="search.html">Search</a></li>
 									<li><a href="clubs.html">Club Directory</a></li>
 									<li><a href="signup.html">Sign Up</a></li>
                                     <li><a href="login.html">Login</a></li>
@@ -37,13 +36,21 @@
 					<div class="container">
 						<div id="content">
                             <h2>Create an Organization Account</h2>
-                            <form action="signin.php" method="post" name="log_in" id="log_in" onsubmit="return login()" style="width:300px">
+                            <form action="#" method="post" name="log_in" id="log_in" onsubmit="return login()" style="width:300px">
                             <label for="name">Organization:</label>
-                            <input type="text" maxlength="80" size="25" id="username" name="username" style="border:1px solid #1a64a3; margin-bottom:10px">
-                            <label for="name">Advisor:</label>
-                            <input type="text" maxlength="80" size="25" id="username" name="username" style="border:1px solid #1a64a3; margin-bottom:10px">
-                            <label for="name">E-mail:</label>
-                            <input type="text" maxlength="80" size="25" id="username" name="username" style="border:1px solid #1a64a3; margin-bottom:10px">
+                            <input type="text" maxlength="80" size="25" id="org" name="org" style="border:1px solid #1a64a3; margin-bottom:10px">
+                            <label for="name">Advisor First Name:</label>
+                            <input type="text" maxlength="80" size="25" id="advisorFname" name="advisorFname" style="border:1px solid #1a64a3; margin-bottom:10px">
+                            <label for="name">Advisor Last Name:</label>
+                            <input type="text" maxlength="80" size="25" id="advisorLname" name="advisorLname" style="border:1px solid #1a64a3; margin-bottom:10px">
+                            <label for="name">Advisor ID Number:</label>
+                            <input type="text" maxlength="80" size="25" id="aid" name="aid" style="border:1px solid #1a64a3; margin-bottom:10px">
+                            <label for="name">Advisor E-mail:</label>
+                            <input type="text" maxlength="80" size="25" id="aemail" name="aemail" style="border:1px solid #1a64a3; margin-bottom:10px">
+                            <label for="name">Advisor's Department:</label>
+                            <input type="text" maxlength="80" size="25" id="dept" name="dept" style="border:1px solid #1a64a3; margin-bottom:10px">
+                            <label for="name">Organization's E-mail:</label>
+                            <input type="text" maxlength="80" size="25" id="email" name="email" style="border:1px solid #1a64a3; margin-bottom:10px">
                             <label for="email">Password:</label>
                             <input type="password" maxlength="80" size="25" id="password" name="password" style="border:1px solid #1a64a3">
                             <input type="submit" name="submit" value="Login">

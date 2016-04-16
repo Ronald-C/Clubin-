@@ -1,0 +1,12 @@
+{
+    "signupOrg": {
+        "org": "Name",
+        "advisorFname": "Mark",
+        "advisorLname": "Smith",
+        "aid": "000000000",
+        "aemail": "from@example.com",
+        "dept": "department",
+        "email": "from@example.com",
+        "password": "secret",
+    }
+}
