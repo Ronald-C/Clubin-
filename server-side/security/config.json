@@ -2,7 +2,7 @@
 	"mysql": {
 		"host": "localhost",
 		"user": "root",
-		"passwd": "pineapple",
+		"passwd": "",
 		"db": "clubin"
 	}
 }
