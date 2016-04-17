@@ -56,6 +56,29 @@ class Validate(object):
 		}
 	}
 
+	FirstName = {
+		'FirstName': {
+			'required': True,
+			'type': 'string',
+			'maxlength': 45
+		}
+	}
+
+	LastName = {
+		'LastName': {
+			'required': True,
+			'type': 'string',
+			'maxlength': 45
+		}
+	}
+
+	MiddleName = {
+		'MiddleName': {
+			'type': 'string',
+			'maxlength': 25
+		}
+	}
+
 	def __init__(self, document):
 		super(Validate, self).__init__()
 		
@@ -87,6 +110,16 @@ class Validate(object):
 
 			elif key is 'ArticleContent':
 				schema['ArticleContent'] = Validate.ArticleContent['ArticleContent']	
+			
+			elif key is 'FirstName':
+				schema['FirstName'] = Validate.FirstName['FirstName']	
+
+			elif key is 'LastName':
+				schema['LastName'] = Validate.LastName['LastName']	
+
+			elif key is 'MiddleName':
+				schema['MiddleName'] = Validate.MiddleName['MiddleName']	
+
 			# 
 			# NOTE:
 			# 	ADD HERE, if extending rules schema

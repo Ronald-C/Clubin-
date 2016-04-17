@@ -20,6 +20,52 @@ class Student(Database):
 		self.conn = super(Student, self).connect()
 		self.session = super(Student, self).getSession()
 
+	def addStudent(self, studentID, studentEmail, FirstName, LastName, MiddleName=None):
+		try:
+			# Validate method arguments
+			Validate({
+				'SJSUID': studentID,
+				'FirstName': FirstName,
+				'LastName': LastName,
+				'MiddleName': MiddleName
+			})
+
+			self.session.execute("""
+				SELECT * FROM Student WHERE Student.`SJSUID` = %s;
+				""", studentID)
+
+			exist = self.session.fetchone()
+			if not exist:
+				# Insert student entity
+				self.session.execute("""
+				INSERT INTO `Student` (`SJSUID`, `Email`, `FirstName`, `LastName`,
+						`MiddleName`) VALUES (%s, %s, %s, %s, %s);
+						""", (studentID, studentEmail, FirstName, LastName, MiddleName) ) 
+
+				self.conn.commit()
+				return True
+
+			else:	# Student entity already exists
+				return False
+
+		except (TypeError, ValidatorException) as e:
+			self.conn.rollback()
+			# Unknown studentID or organizationName was encountered
+			self._printWarning("%s", e)
+
+			#
+			# TODO:
+			#	return message to frontend of error
+			#	return to frontend high priority validation errors
+			# 
+			return e
+
+		except Exception as e:
+			self.conn.rollback()
+			
+			# A non-existing organization was specified!!!
+			self._printError("%s", e)
+
 	def joinOrganization(self, studentID, organizationName):
 		try:
 			# Validate method arguments
@@ -328,7 +374,11 @@ class Student(Database):
 			self.conn.rollback()
 			self._printError("%s", e)
 
-	def editPersonalInfo(self, studentID, **kwargs):
+	def editStudent(self, studentID, **kwargs):
+		# 
+		# TODO:
+		# 	this method should be able to edit attributes of the Student entity
+		# 
 		pass
 
 	def _isStudentActiveMember(self, uidStudent, uidOrganization):
