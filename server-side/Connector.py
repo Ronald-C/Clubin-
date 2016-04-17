@@ -12,6 +12,7 @@ import MySQLdb as mdb 		# _mysql Python wrapper
 import sys
 from json import load
 
+
 class Database(object):
 	""" MySQL database connection class
 
