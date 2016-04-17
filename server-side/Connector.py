@@ -12,13 +12,13 @@ import MySQLdb as mdb 		# _mysql Python wrapper
 from sys import exit
 from json import load
 
-from flask import Flask
-app = Flask(__name__)
-@app.route('/')
-def home():
-    return "Hey there!"
-if __name__ == '__main__':
-    app.run(debug=True)
+#from flask import Flask
+#app = Flask(__name__)
+#@app.route('/')
+#def home():
+#    return "Hey there!"
+#if __name__ == '__main__':
+#    app.run(debug=True)
 
 class Database(object):
 
