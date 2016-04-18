@@ -3,7 +3,8 @@
 import traceback
 
 from Connector import Database
-from Validater import *
+from Validater import Validate
+from CustomException import ValidatorException
 
 DEBUG = True 	# Set this variable for console print
 

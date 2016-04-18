@@ -60,6 +60,7 @@ class Validate(object):
 		'FirstName': {
 			'required': True,
 			'type': 'string',
+			'minlength': 3,
 			'maxlength': 45
 		}
 	}
@@ -68,14 +69,25 @@ class Validate(object):
 		'LastName': {
 			'required': True,
 			'type': 'string',
+			'minlength': 3,
 			'maxlength': 45
 		}
 	}
 
 	MiddleName = {
 		'MiddleName': {
+			'nullable': True,
 			'type': 'string',
 			'maxlength': 25
+		}
+	}
+
+	Department = {
+		'Department': {
+			'required': True,
+			'type': 'string',
+			'minlength': 3,
+			'maxlength': 45
 		}
 	}
 
@@ -118,7 +130,10 @@ class Validate(object):
 				schema['LastName'] = Validate.LastName['LastName']	
 
 			elif key is 'MiddleName':
-				schema['MiddleName'] = Validate.MiddleName['MiddleName']	
+				schema['MiddleName'] = Validate.MiddleName['MiddleName']
+
+			elif key is 'Department':
+				schema['Department'] = Validate.Department['Department']	
 
 			# 
 			# NOTE:
