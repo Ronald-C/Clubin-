@@ -47,7 +47,7 @@ class Student(Database):
 				return True
 
 			else:	# Student entity already exists
-				return False
+				raise TypeError("Student already registered")
 
 		except (TypeError, ValidatorException) as e:
 			self.conn.rollback()

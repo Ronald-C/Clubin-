@@ -4,6 +4,8 @@ from Connector import Database
 from Validater import Validate
 from CustomException import ValidatorException
 
+DEBUG = True
+
 class Advisor(Database):
 
 	def __init__(self):
@@ -19,7 +21,8 @@ class Advisor(Database):
 				'FirstName': FirstName,
 				'LastName': LastName,
 				'Department': Department,
-				'MiddleName': MiddleName
+				'MiddleName': MiddleName,
+				'Email': Email
 			})
 			
 			# Check if this advisor (professor) already exists in DB
@@ -41,7 +44,7 @@ class Advisor(Database):
 				return True
 				
 			else:	# Advisor entity already exists
-				return False
+				raise TypeError("Advisor already registered")
 
 		except (TypeError, ValidatorException) as e:
 			self.conn.rollback()
@@ -78,3 +81,7 @@ class Advisor(Database):
 		# Print traceback if debugging ON
 		if 'DEBUG' in globals() and DEBUG:
 			print traceback.format_exc()
+
+
+s = Advisor()
+s.addAdvisor('dasdfsdssa', 'sadsfddsads', 'ronald@gmail.com', 'Depadfrtment')
