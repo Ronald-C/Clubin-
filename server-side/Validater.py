@@ -56,7 +56,7 @@ class Validate(object):
 			'minlength': 3,
 			'maxlength': 45
 		},
-		'MiddleName': {
+		'MiddleName': {		# Optional 
 			'nullable': True,
 			'type': 'string',
 			'maxlength': 25
@@ -79,16 +79,17 @@ class Validate(object):
 		if not isinstance(document, dict):
 			raise TypeError("Validate document expect class dict")
 
-		schema = {}
-		errors = {}
+		schema = {}		# The rules that dictate format of document
+		errors = {}		# Any errors as a result of validation
 
 		# Verify email formatting
 		if 'Email' in document:
 			EMAIL_REGEX = re.compile(r"^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$")
+			
 			if not EMAIL_REGEX.match(document['Email']):
 				errors['EmailValidation'] = "Email does not meet requirements"
 
-			del document['Email']	# Remove Email in document before validating
+			del document['Email']	# Remove Email in document before validation
 
 		# Build schema rules if exists
 		for key, value in document.iteritems():	

@@ -1,6 +1,7 @@
 # Student entity
 
 import traceback
+import re
 
 from Connector import Database
 from Validater import Validate
@@ -16,56 +17,10 @@ class Student(Database):
 	"""
 
 	def __init__(self):
-		# super(Student, self).__init__()
+		super(Student, self).__init__()
 		# Get connection & cursor from Database
 		self.conn = super(Student, self).connect()
 		self.session = super(Student, self).getSession()
-
-	def addStudent(self, studentID, studentEmail, FirstName, LastName, MiddleName=None):
-		try:
-			# Validate method arguments
-			Validate({
-				'SJSUID': studentID,
-				'FirstName': FirstName,
-				'LastName': LastName,
-				'MiddleName': MiddleName
-			})
-
-			self.session.execute("""
-				SELECT * FROM Student WHERE Student.`SJSUID` = %s;
-				""", studentID)
-
-			exist = self.session.fetchone()
-			if not exist:
-				# Insert student entity
-				self.session.execute("""
-				INSERT INTO `Student` (`SJSUID`, `Email`, `FirstName`, `LastName`,
-						`MiddleName`) VALUES (%s, %s, %s, %s, %s);
-						""", (studentID, studentEmail, FirstName, LastName, MiddleName) ) 
-
-				self.conn.commit()
-				return True
-
-			else:	# Student entity already exists
-				raise TypeError("Student already registered")
-
-		except (TypeError, ValidatorException) as e:
-			self.conn.rollback()
-			# Unknown studentID or organizationName was encountered
-			self._printWarning("%s", e)
-
-			#
-			# TODO:
-			#	return message to frontend of error
-			#	return to frontend high priority validation errors
-			# 
-			return e
-
-		except Exception as e:
-			self.conn.rollback()
-			
-			# A non-existing organization was specified!!!
-			self._printError("%s", e)
 
 	def joinOrganization(self, studentID, organizationName):
 		try:
@@ -376,11 +331,44 @@ class Student(Database):
 			self._printError("%s", e)
 
 	def editStudent(self, studentID, **kwargs):
-		# 
-		# TODO:
-		# 	this method should be able to edit attributes of the Student entity
-		# 
-		pass
+		try:
+			# Validate arguments
+			Validate({
+				'SJSUID': studentID	
+			})
+
+			# Loop kwargs and do queries
+			for key, value in kwargs.iteritems():
+				if key == 'Email':
+					self.__updateStudentEmail(studentID, value)
+
+				# 
+				# INSERT HERE IF ADDITIONAL STUDENT ATTRIBUTE EDIT FUNC
+				# 
+
+				else:	# Unknown key was passed to method
+					raise TypeError("Student attribute not found")
+
+			self.conn.commit()	# Commit transaction only after all changes applied
+			return True
+
+		except (TypeError, ValidatorException) as e:
+			self.conn.rollback()
+			# Unknown studentID or organizationName was encountered
+			self._printWarning("%s", e)
+ 
+			#
+			# TODO:
+			#	return message to frontend of error
+			#	return to frontend high priority validation errors
+			# 
+			return e
+
+		except Exception as e:
+			self.conn.rollback()
+			
+			# A non-existing organization was specified!!!
+			self._printError("%s", e)
 
 	def _isStudentActiveMember(self, uidStudent, uidOrganization):
 		self.session.execute("""
@@ -439,6 +427,18 @@ class Student(Database):
 		else:
 			uidOrganization = uidOrganization['OrganizationID']
 			return str(uidOrganization)
+
+	def __updateStudentEmail(self, studentID, newStudentEmail):
+		EMAIL_REGEX = re.compile(r"^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$")
+
+		if not EMAIL_REGEX.match(newStudentEmail):	# Validate email format
+			raise TypeError("Student email update error")
+
+		self.session.execute("""
+			UPDATE Student 
+			SET Student.`Email` = %s
+				WHERE Student.`SJSUID` = %s;
+			""", (newStudentEmail, studentID))
 
 	@staticmethod
 	def _printWarning(message, *args):
