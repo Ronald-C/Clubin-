@@ -1,7 +1,7 @@
 # Officer entity (inherits Student)
 
 from Student import Student
-from Validater import *
+from Validater import Validate
 
 class Officer(Student):
 	""" A class that defines an Officer entity
@@ -108,12 +108,6 @@ class Officer(Student):
 			# A non-existing organization was specified!!!
 			self._printError("%s", e)
 
-	def quitOrganization(self, studentID, organizationName):
-		# Leaving organization means removal from MemberOf and OfficerOf table
-		# NOTE: This is an overloaded function of Student.quitOrganization
-		pass
-		
-
 	def _isOfficerActive(self, uidStudent, uidOrganization):
 		# NOTE: An active entry in OfficerOf table means they are an officer
 		self.session.execute("""
@@ -129,3 +123,7 @@ class Officer(Student):
 			return True;
 
 		return False
+
+
+o = Officer()
+print o.leaveOffice('007810023', 'sce')

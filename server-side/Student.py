@@ -330,7 +330,7 @@ class Student(Database):
 			self.conn.rollback()
 			self._printError("%s", e)
 
-	def editStudent(self, studentID, **kwargs):
+	def editStudentInfo(self, studentID, **kwargs):
 		try:
 			# Validate arguments
 			Validate({
