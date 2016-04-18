@@ -81,7 +81,3 @@ class Advisor(Database):
 		# Print traceback if debugging ON
 		if 'DEBUG' in globals() and DEBUG:
 			print traceback.format_exc()
-
-
-s = Advisor()
-s.addAdvisor('dasdfsdssa', 'sadsfddsads', 'ronald@gmail.com', 'Depadfrtment')
