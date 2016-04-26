@@ -37,7 +37,7 @@
 
       <header class="main-header">
         <!-- Logo -->
-        <a href="index.html" class="logo">
+        <a href="{{ url_for('index')}}" class="logo">
           <!-- mini logo for sidebar mini 50x50 pixels -->
           <span class="logo-mini">138</span>
           <!-- logo for regular state and mobile devices -->
@@ -67,21 +67,14 @@
                       Org Name
                     </p>
                   </li>
-                  <!-- Menu Body -->
-                  <li class="user-body">
- 
-                  </li>
                   <!-- Menu Footer-->
                   <li class="user-footer">
-
                     <div class="pull-right">
-                      <a href="{{ url_for('index')}}" class="btn btn-default btn-flat">Sign out</a>
+                      <a href="{{ url_for('logout')}}" class="btn btn-default btn-flat">Sign out</a>
                     </div>
                   </li>
                 </ul>
               </li>
-              <!-- Control Sidebar Toggle Button -->
- 
             </ul>
           </div>
         </nav>
@@ -103,35 +96,27 @@
           <!-- sidebar menu: : style can be found in sidebar.less -->
           <ul class="sidebar-menu">
             <li class="active treeview">
-              <a href="index.html">
+              <a href="{{url_for('org')}}">
                 <i class="fa fa-dashboard"></i> <span>Main Dashboard</span>
               </a>
 
             </li>
             <li class="treeview">
-              <a href="#">
+              <a href="{{url_for('orgprofile')}}">
                 <i class="fa fa-graduation-cap"></i>
-                <span>My Organizations</span>
-                <i class="fa fa-angle-left pull-right"></i>
-              </a>
-              <ul class="treeview-menu">
-                  <!--These will be changed-->
-                <li><a href="#"><i class="fa fa-circle-o"></i>SCE</a></li>
-                <li><a href="#"><i class="fa fa-circle-o"></i>Pokemon Club</a></li>
-                <li><a href="#"><i class="fa fa-circle-o"></i>IEEE</a></li>
-                <li><a href="#"><i class="fa fa-circle-o"></i>Juggling Club</a></li>
-              </ul>
-            </li>
-            <li class="treeview">
-              <a href="interests.html">
-                <i class="fa fa-thumbs-up"></i>
-                <span>My Interests</span>
+                <span>My Profile</span>
               </a>
             </li>
             <li class="treeview">
-              <a href="#">
+              <a href="{{ url_for('search')}}">
                 <i class="fa fa-plus"></i>
-                <span>New Organizations</span>
+                <span>Search</span>
+              </a>
+            </li>
+            <li class="treeview">
+              <a href="{{ url_for('orgsettings')}}">
+                <i class="fa fa-plus"></i>
+                <span>Change Settings</span>
               </a>
             </li>
 
@@ -150,7 +135,7 @@
 
         <!-- Main content -->
         <section class="content">
-                
+            
             {% block body%}
             
             
