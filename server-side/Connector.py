@@ -19,10 +19,10 @@ class Database(object):
 	only instances a single shared connection. Implementing pooled connections is possible
 	by refactoring this class a minimal impact to other modules that require Database class
 	"""
-
-	__database		= None	
-	__connection 	= None
-	__session 		= None 		# Database cursor object
+db = MySQLdb.connection('localhost', 'root', 'Palest1ne', 'Clubin')
+	#__database		= None	
+	#__connection 	= None
+	#__session 		= None 		# Database cursor object
 
 	def __init__(self):
 		# Controls initialization of a new instance

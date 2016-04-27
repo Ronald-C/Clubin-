@@ -15,11 +15,14 @@ class Student(Database):
 	"""
 
 	def __init__(self):
-		# super(Student, self).__init__()
+		 super(Student, self).__init__()
 		# Get connection & cursor from Database
 		self.conn = super(Student, self).connect()
 		self.session = super(Student, self).getSession()
-
+		def addStudent(self,studentID, studentEmail, FirstName, LastName, MiddleName=None):
+			self.session.execute("""INSERT INTO Student (SJSUID, Email, FirstName, 'MiddleName', 'LastName')
+			VALUES(SJSUID,Email,FirstName,MiddleName,LastName""", (SJSUID,Email,FirstName,MiddleName,LastName))
+	#session.execute(add_Student)
 	def joinOrganization(self, studentID, organizationName):
 		try:
 			# Validate method arguments
@@ -389,6 +392,12 @@ class Student(Database):
 			uidOrganization = uidOrganization['OrganizationID']
 			return str(uidOrganization)
 
+
+	def _makeStudentAdmin(self, OfficerOf):
+		self.session.execute("""UPDATE Student 
+								SET officerOf='organizationName'
+								WHERE name='FirstName'
+			""")
 	@staticmethod
 	def _printWarning(message, *args):
 		global DEBUG

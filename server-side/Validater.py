@@ -4,13 +4,13 @@ from cerberus import Validator
 
 from CustomException import *
 
-class Validate(object):
+class Validate(Validator):
+#class MyValidator(Validator):
 	""" Validation class using cerberus 
 	
 	Takes json structured inputs to validate, raising errors if any
 	A non-return indicates everything is valid
 	"""
-
 	SJSUID = {
 		'SJSUID': {
 			'required': True,
