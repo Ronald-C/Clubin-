@@ -20,3 +20,4 @@ class Admin(Officer): # Admin class declaration
 		self.session.execute("""
 			DELETE from Student where SJSUID='%s'; """ % SJSUID)	# MySQL Instance of deleting a student using their Student ID to be removed from the database
 		self.conn.commit()
+	#this program should do basic functions thus far
