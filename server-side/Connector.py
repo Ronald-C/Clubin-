@@ -11,6 +11,7 @@
 import MySQLdb as mdb 		# _mysql Python wrapper
 import sys
 from json import load
+import os
 
 
 class Database(object):
@@ -26,6 +27,7 @@ class Database(object):
 	__session 		= None 		# Database cursor object
 
 	def __init__(self):
+		super(Database, self).__init__()
 		# Controls initialization of a new instance
 		pass
 
@@ -36,7 +38,9 @@ class Database(object):
 			return 
 		
 		try:
-			with open('security/config.json', 'r') as f:
+			absPath = os.path.dirname(os.path.abspath(__file__))
+
+			with open(os.path.join(absPath, 'security/config.json'), 'r') as f:
 				cfg = load(f)["mysql"]		# Access credentials
 				cls.configFile = f 		# Save file instance
 			

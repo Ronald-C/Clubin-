@@ -13,10 +13,10 @@ class Registration(Database):
 	and use methods to insert account information about user.
 	"""
 	def __init__(self):
-		super(Student, self).__init__()
+		super(Registration, self).__init__()
 		# Get connection & cursor from Database
-		self.conn = super(Student, self).connect()
-		self.session = super(Student, self).getSession()
+		self.conn = super(Registration, self).connect()
+		self.session = super(Registration, self).getSession()
 
 	def addStudent(self, studentID, studentEmail, FirstName, LastName, MiddleName=None):
 		try:
