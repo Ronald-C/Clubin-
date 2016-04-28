@@ -1,4 +1,9 @@
-from datetime import datetime
+# 
+# REFERENCES
+# - http://flask.pocoo.org/docs/0.10/api/
+# - http://flask.pocoo.org/docs/0.10/quickstart/#routing
+
+import os
 from flask import (
     Flask, abort, flash, redirect, render_template,
     request, url_for,
@@ -8,7 +13,7 @@ from flask.ext.stormpath import (
     login_user, logout_user, user,
 )
 
-app = Flask(__name__)
+app = Flask('Clubin')
 
 app.config['DEBUG'] = True
 app.config['SECRET_KEY'] = 'some_really_long_random_string_here'
@@ -17,10 +22,16 @@ app.config['STORMPATH_APPLICATION'] = 'flaskr'
 
 stormpath_manager = StormpathManager(app)
 
+# Defined landing page
 @app.route('/')
 def index():
     return render_template("index.html")
 
+
+@app.route('/signup')
+def signup():
+    return render_template('signup.html')
+    
 # @app.route('/')
 # def dashboard():
 #     posts = []
@@ -71,9 +82,6 @@ def widgets():
 def hometemplate():
     return render_template('hometemplate.html')
 
-@app.route('/signup')
-def signup():
-    return render_template('signup.html')
 
 @app.route('/studentsignup')
 def studentsignup():
@@ -135,5 +143,21 @@ def orghome():
 #    return render_template('buttons.html')
 
 
+# Default catch all routes; 401 status
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def catch_all(path):
+    return 'You want path: %s' % path
+
+
 if __name__ == '__main__':
-    app.run()
+    DEFAULT_HOST = '127.0.0.1'      # Set env to config host/port
+    DEFAULT_PORT = 5000
+
+    if 'PORT' in os.environ:
+        DEFAULT_PORT = int(os.environ['PORT'])
+
+    if 'HOST' in os.environ:
+        DEFAULT_HOST = str(os.environ['HOST'])
+
+    app.run(host=DEFAULT_HOST, port=DEFAULT_PORT)
