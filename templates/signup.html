@@ -1,0 +1,41 @@
+{% extends "hometemplate.html" %}
+
+{% block head %}
+	{{ super() }}
+
+{% endblock %}
+
+
+{% block body %}
+	{{ super() }}
+
+      <!-- Content Wrapper. Contains page content -->
+    <center>  <div class="content-wrapper" style="width:80%">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+         <h2>Create an Account</h2>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+          <div class="row" style="margin-top: 10px;">
+            <div class="col-md-12">
+              <div class="box box-primary">
+                <div class="box-header">
+                  <h3 class="box-title">Are you an individual student looking to connect with organizations at SJSU, or are you an organization looking to create a webpage?</h3>
+                </div>
+                <div class="box-body">
+                    <div style="float:left;display: inline-block;"><h4>Student</h4>
+                        <a href="{{ url_for('studentsignup')}}"><img src="http://www.clker.com/cliparts/c/7/W/l/I/4/orangeman-joy-simple.svg" width="400px" height="auto"></a></div>
+                        <div style="float:right; display: inline-block;"><h4>Organization</h4>
+                            <a href="{{ url_for('orgsignup')}}"><img src="http://images.clipartpanda.com/group-clipart-group-md.png" width="300px" height="auto"></a></div>
+                </div><!-- /.box-body -->
+              </div><!-- /.box -->
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+
+        </section><!-- /.content -->
+      </div><!-- /.content-wrapper -->
+</center>
+
+ {%endblock%}
