@@ -367,7 +367,7 @@ class Student(Database):
 		except Exception as e:
 			self.conn.rollback()
 			
-			# A non-existing organization was specified!!!
+			# A 3-existing organization was specified!!!
 			self._printError("%s", e)
 
 	def _isStudentActiveMember(self, uidStudent, uidOrganization):
