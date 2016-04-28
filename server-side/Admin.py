@@ -19,6 +19,10 @@ class Admin(Officer):
 				VALUES (%s,%s,%s,%s,%s)""", (SJSUID,Email,FirstName, MiddleName,LastName))
 		self.conn.commit()
 		
+	#def removeStudent(self, FirstName, MiddleName,LastName):
 
-
+	#	self.session.execute("""
+	##		DELETE from Student where FirstName='FirstName', MiddleName='MiddleName', LastName='LastName'
+	#		VALUES (%s,%s,%s)""",(FirstName,MiddleName,LastName))
+	#	self.conn.commit()
 
