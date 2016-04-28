@@ -12,6 +12,7 @@ import MySQLdb as mdb 		# _mysql Python wrapper
 import sys
 from json import load
 
+
 class Database(object):
 	""" MySQL database connection class
 
@@ -19,10 +20,10 @@ class Database(object):
 	only instances a single shared connection. Implementing pooled connections is possible
 	by refactoring this class a minimal impact to other modules that require Database class
 	"""
-db = MySQLdb.connection('localhost', 'root', 'Palest1ne', 'Clubin')
-	#__database		= None	
-	#__connection 	= None
-	#__session 		= None 		# Database cursor object
+
+	__database		= None	
+	__connection 	= None
+	__session 		= None 		# Database cursor object
 
 	def __init__(self):
 		# Controls initialization of a new instance
@@ -51,7 +52,7 @@ db = MySQLdb.connection('localhost', 'root', 'Palest1ne', 'Clubin')
 
 			cls.__session.execute("SELECT VERSION()");
 			ver = cls.__session.fetchone()
-			print "[SERVER] Database ver: %s " % ver
+			#print "[SERVER] Database ver: %s " % ver
 
 			return cls.__connection 	# Return conn instance
 
