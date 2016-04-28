@@ -1,9 +1,11 @@
 # Student entity
 
 import traceback
+#import re
 
 from Connector import Database
-from Validater import *
+from Validater import Validate
+from CustomException import ValidatorException
 
 DEBUG = True 	# Set this variable for console print
 
@@ -15,14 +17,11 @@ class Student(Database):
 	"""
 
 	def __init__(self):
-		 super(Student, self).__init__()
+		super(Student, self).__init__()
 		# Get connection & cursor from Database
 		self.conn = super(Student, self).connect()
 		self.session = super(Student, self).getSession()
-		def addStudent(self,studentID, studentEmail, FirstName, LastName, MiddleName=None):
-			self.session.execute("""INSERT INTO Student (SJSUID, Email, FirstName, 'MiddleName', 'LastName')
-			VALUES(SJSUID,Email,FirstName,MiddleName,LastName""", (SJSUID,Email,FirstName,MiddleName,LastName))
-	#session.execute(add_Student)
+
 	def joinOrganization(self, studentID, organizationName):
 		try:
 			# Validate method arguments
@@ -331,8 +330,45 @@ class Student(Database):
 			self.conn.rollback()
 			self._printError("%s", e)
 
-	def editPersonalInfo(self, studentID, **kwargs):
-		pass
+	def editStudentInfo(self, studentID, **kwargs):
+		try:
+			# Validate arguments
+			Validate({
+				'SJSUID': studentID	
+			})
+
+			# Loop kwargs and do queries
+			for key, value in kwargs.iteritems():
+				if key == 'Email':
+					self.__updateStudentEmail(studentID, value)
+
+				# 
+				# INSERT HERE IF ADDITIONAL STUDENT ATTRIBUTE EDIT FUNC
+				# 
+
+				else:	# Unknown key was passed to method
+					raise TypeError("Student attribute not found")
+
+			self.conn.commit()	# Commit transaction only after all changes applied
+			return True
+
+		except (TypeError, ValidatorException) as e:
+			self.conn.rollback()
+			# Unknown studentID or organizationName was encountered
+			self._printWarning("%s", e)
+ 
+			#
+			# TODO:
+			#	return message to frontend of error
+			#	return to frontend high priority validation errors
+			# 
+			return e
+
+		except Exception as e:
+			self.conn.rollback()
+			
+			# A non-existing organization was specified!!!
+			self._printError("%s", e)
 
 	def _isStudentActiveMember(self, uidStudent, uidOrganization):
 		self.session.execute("""
@@ -392,12 +428,18 @@ class Student(Database):
 			uidOrganization = uidOrganization['OrganizationID']
 			return str(uidOrganization)
 
+	def __updateStudentEmail(self, studentID, newStudentEmail):
+		EMAIL_REGEX = re.compile(r"^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$")
 
-	def _makeStudentAdmin(self, OfficerOf):
-		self.session.execute("""UPDATE Student 
-								SET officerOf='organizationName'
-								WHERE name='FirstName'
-			""")
+		if not EMAIL_REGEX.match(newStudentEmail):	# Validate email format
+			raise TypeError("Student email update error")
+
+		self.session.execute("""
+			UPDATE Student 
+			SET Student.`Email` = %s
+				WHERE Student.`SJSUID` = %s;
+			""", (newStudentEmail, studentID))
+
 	@staticmethod
 	def _printWarning(message, *args):
 		global DEBUG
