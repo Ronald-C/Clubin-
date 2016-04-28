@@ -1,7 +1,7 @@
 # Officer entity (inherits Student)
 
 from Student import Student
-from Validater import *
+from Validater import Validate
 
 class Officer(Student):
 	""" A class that defines an Officer entity
@@ -23,10 +23,10 @@ class Officer(Student):
 			}) 
 
 			# Get organization unique id
-			uidOrganization = self._getOrganizationUID(organizationName)
+			uidOrganization = super(Officer, self)._getOrganizationUID(organizationName)
 
 			# Get student unique id
-			uidStudent = self._getStudentUID(studentID)
+			uidStudent = super(Officer, self)._getStudentUID(studentID)
 
 			# Check active status of this officer
 			active = self._isOfficerActive(uidStudent, uidOrganization)
@@ -37,7 +37,7 @@ class Officer(Student):
 				self.session.execute("""
 					INSERT INTO NewsfeedArticle (`ArticleTitle`, `OrganizationID`, `ArticleContent`)
 						VALUES (%s, %s, %s);
-					""", (articleTitle, uidOrganization, articleContent))
+					""", (articleTitle.strip(), uidOrganization, articleContent.strip()))
 
 				self.conn.commit()
 				return True
@@ -62,6 +62,52 @@ class Officer(Student):
 			# A non-existing organization was specified!!!
 			self._printError("%s", e)
 
+
+	def leaveOffice(self, studentID, organizationName):
+		# Leaving officer position does not mean quitting organization
+		try:
+			# Validate method arguments
+			Validate({
+				'SJSUID': studentID,
+				'OrganizationName': organizationName
+			})
+
+			# Get student unique id
+			uidStudent = super(Officer, self)._getStudentUID(studentID)
+
+			# Get organization unique id
+			uidOrganization = super(Officer, self)._getOrganizationUID(organizationName)
+
+			self.conn.commit()	# Being new transaction
+
+			# Change officer status to inactive(0)
+			self.session.execute("""
+				UPDATE OfficerOf
+					SET `Active` = '0'
+					WHERE OfficerOf.`Student_fk` = %s AND OfficerOf.`Organization_fk` = %s;
+				""", (uidStudent, uidOrganization))
+			
+			self.conn.commit()
+			return True
+
+		#except (TypeError, ValidaterException) as e:
+		#	self.conn.rollback()
+			# Unknown studentID or organizationName was encountered
+		#	self._printWarning("%s", e)
+ 
+			#
+			# TODO:
+			#	return message to frontend of error
+			#	return to frontend high priority validation errors
+			# 
+		#	return e
+
+		except Exception as e:
+			self.conn.rollback()
+			
+			# A non-existing organization was specified!!!
+			self._printError("%s", e)
+
 	def _isOfficerActive(self, uidStudent, uidOrganization):
 		# NOTE: An active entry in OfficerOf table means they are an officer
 		self.session.execute("""
@@ -77,4 +123,3 @@ class Officer(Student):
 			return True;
 
 		return False
-
