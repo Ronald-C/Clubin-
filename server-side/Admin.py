@@ -1,21 +1,24 @@
-#!/usr/bin/python
+from Officer import Officer
+from Student import Student
+#from Validater import Validate
 
-import NewConnector 
+class Admin(Officer):
 
-#db = MySQLdb.connect("localhost", "root", "Palest1ne", "Clubin")
+	def _init_(self):
+			
 
-#cursor = db.cursor()
-#SJSUID = "006181240"
-#Email = "omar.mousa@sjsu.edu"
-#FirstName = "omar"
-#MiddleName = "mohammed"
-#LastName = "mousa"
+			super(Admin, self)._init_()
 
-db.commit()
+	def addStudent(self, SJSUID, Email, FirstName, MiddleName, LastName):
 
-db.close()
-	
+		#uidStudent = super(Admin, self)._getStudentUID(SJSUID)
 
-	#cursor.execute("SELECT VERSION()");
-#ver = cursor.fetchone()
-#print "[SERVER] Database ver: %s " % ver
+		
+		self.session.execute(""" 
+			INSERT INTO Student (SJSUID, Email, FirstName,MiddleName, LastName) 
+				VALUES (%s,%s,%s,%s,%s)""", (SJSUID,Email,FirstName, MiddleName,LastName))
+		self.conn.commit()
+		
+
+
+
