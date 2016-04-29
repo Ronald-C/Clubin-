@@ -1,5 +1,3 @@
-{% extends "hometemplate.html" %}
-
 {% block head %}
 	{{ super() }}
 
@@ -30,7 +28,10 @@
                             <form action="/studenthome">
                                 <table>
                                 <tr>
-                                    <td><a href=""> <input type="checkbox" name="" value="">Sports</a></td>
+                                    <td><a href=""> <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="checkbox-2">
+  <input type="checkbox" id="checkbox-2" class="mdl-checkbox__input">
+  <span class="mdl-checkbox__label">Sports</span>
+</label></td>
                                     <td><a href=""> <input type="checkbox" name="" value="">Engineering</a></td>
                                     <td><a href=""> <input type="checkbox" name="" value="">Art</a></td>
                                     <td><a href=""> <input type="checkbox" name="" value="">Music</a></td>
@@ -57,10 +58,10 @@
                                     <td><a href=""> <input type="checkbox" name="" value="">Honor Societies</a></td>
                                 </tr>
                                 </table>
-                              <input type="submit" value="Submit">
+                              <input type="submit" class="btn btn-danger" value="Submit">
                                  </form><br>
                                  <form method="get" action="/studenthome">
-                                    <button type="submit">Skip</button>
+                                    <button type="submit" class="btn btn-danger">Skip</button>
                                 </form>
 						</div>
 					

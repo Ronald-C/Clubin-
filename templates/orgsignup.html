@@ -22,24 +22,36 @@
             <div class="col-md-12">
               <div class="box box-primary">
                 <div class="box-body">
-                <form method="post" action="{{ url_for('orghome')}}" style="width:300px">
-                      <label for="yourname">Organization:</label>
-                      <input type="text" name="org" style="border:1px solid #1a64a3; margin-bottom:10px" /><br />
-                      <label for="yourname">Advisor First Name:</label>
-                      <input type="text" name="aFname" style="border:1px solid #1a64a3; margin-bottom:10px"/><br />
-                      <label for="yourname">Advisor Last Name:</label>
-                      <input type="text" name="aLname" style="border:1px solid #1a64a3; margin-bottom:10px"/><br />
-                      <label for="yourname">Advisor ID:</label>
-                      <input type="text" name="aid" style="border:1px solid #1a64a3; margin-bottom:10px" /><br />
-                      <label for="yourname">Advisor Email:</label>
-                      <input type="text" name="aemail" style="border:1px solid #1a64a3; margin-bottom:10px"/><br />
-                      <label for="yourname">Department:</label>
-                      <input type="text" name="dept" style="border:1px solid #1a64a3; margin-bottom:10px"/><br />
-                      <label for="yourname">Organization E-Mail:</label>
-                      <input type="text" name="orgemail" style="border:1px solid #1a64a3; margin-bottom:10px"/><br />
-                      <label for="yourname">Password:</label>
-                      <input type="text" name="password" style="border:1px solid #1a64a3; margin-bottom:10px"/><br />
-                      <input type="submit" />
+                    
+                <form method="post" class="form-horizontal" action="{{ url_for('orghome')}}" style="width:80%">
+                      <label for="org" class="col-sm-2 control-label">Organization:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="org"  /><br /></div>
+                      <label for="aFname" class="col-sm-2 control-label">Advisor First Name:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="aFname"/><br /></div>
+                      <label for="aLname" class="col-sm-2 control-label">Advisor Last Name:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="aLname"/><br /></div>
+                      <label for="aid" class="col-sm-2 control-label">Advisor ID:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="aid" /><br /></div>
+                      <label for="aemail" class="col-sm-2 control-label">Advisor Email:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="aemail"/><br /></div>
+                      <label for="dept" class="col-sm-2 control-label">Department:</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" name="dept"/><br />
+                    </div>
+                      <label for="oemail" class="col-sm-2 control-label">Organization E-Mail:</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" name="orgemail"/><br />
+                    </div>
+                      <label for="password" class="col-sm-2 control-label">Password:</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" name="password"/><br />
+                    </div>
+                      <input type="submit" class="btn btn-danger" />
                     </form>
 				</div>
                 </div><!-- /.box-body -->

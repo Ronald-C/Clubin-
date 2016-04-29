@@ -68,6 +68,13 @@ def logout():
 
 
 
+#<<<<<<< HEAD
+@app.route('/studentsettings')
+def studentsettings():
+    return render_template('studentsettings.html')
+
+#=======
+#>>>>>>> refs/remotes/origin/master
 @app.route('/orgprofile')
 def orgprofile():
     return render_template('orgprofile.html')
@@ -150,3 +157,4 @@ def orghome():
 
 if __name__ == '__main__':
     app.run(debug=True)
+{% extends "hometemplate.html" %}
