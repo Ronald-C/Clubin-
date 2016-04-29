@@ -40,7 +40,7 @@ class Database(object):
 		try:
 			absPath = os.path.dirname(os.path.abspath(__file__))
 
-			with open(os.path.join(absPath, 'security/config.json'), 'r') as f:
+			with open(os.path.join(absPath, '../security/config.json'), 'r') as f:
 				cfg = load(f)["mysql"]		# Access credentials
 				cls.configFile = f 		# Save file instance
 			
