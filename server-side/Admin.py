@@ -21,9 +21,9 @@ class Admin(Officer): # Admin class declaration
 								VALUES(%s,%s,%s)""" , (uidStudent,uidOfficer,uidOrganization))
 		self.conn.commit()
 	
-	def orgInfo(self,orgID,orgName,Descrip,Building,RoomNumber):
-		self.session.execute("""UPDATE Organization
+	def orgInfo(self,orgID,orgName,Descrip,Building,RoomNumber): # updating an organization info
+		self.session.execute("""UPDATE Organization 
 								SET Organization.`OrganizationName` = %s, Organization.`Description` = %s, Organization.`Building` = %s ,Organization.`RoomNumber` = %s  
 								WHERE Organization.`OrganizationID` = %s
-								""", (orgID,orgName,Descrip,Building,RoomNumber))
+								""", (orgID,orgName,Descrip,Building,RoomNumber)) # updates Name,Description,Building, RoomNumber based on the orgID number
 		self.conn.commit()
