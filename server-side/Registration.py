@@ -75,6 +75,8 @@ class Registration(Database):
 		except ValidatorException as e:
 			self._printWarning("%s", e)
 
+			raise e
+
 
 	def existingUser(self, email):
 		self.session.execute("""

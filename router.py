@@ -4,66 +4,125 @@
 # - http://flask.pocoo.org/docs/0.10/quickstart/#routing
 
 import os
+import sys
+import __builtin__
+import json
 from flask import (
     Flask, abort, flash, redirect, render_template,
     request, url_for,
 )
-from flask.ext.stormpath import (
-    StormpathError, StormpathManager, User, login_required,
-    login_user, logout_user, user,
-)
+from stormpath.client import Client
 
-app = Flask('Clubin')
+# Add directory to path to access modules outside of ./
+abspath = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(abspath, 'server-side'))
 
-app.config['DEBUG'] = True
-app.config['SECRET_KEY'] = 'some_really_long_random_string_here'
-app.config['STORMPATH_API_KEY_FILE'] = 'apiKey.properties'
-app.config['STORMPATH_APPLICATION'] = 'flaskr'
+# View modules
+from Registration import Registration
+from Student import Student
 
-stormpath_manager = StormpathManager(app)
+__builtin__.DEBUG = True
+app = Flask('Clubin')      # Flask app
+
+# Create a new Stormpath Client.
+apiKeys = os.path.join(abspath, 'security/apiKey.properties')
+client = Client(api_key_file_location=os.path.expanduser(apiKeys))
+# Retrieve our application
+href = 'https://api.stormpath.com/v1/applications/77J8SNb4s5dMV8eJQ4Ujw1'
+stormApp = client.applications.get(href)
 
 # Defined landing page
 @app.route('/')
 def index():
     return render_template("index.html")
 
-
+# Render the registration HTML page
 @app.route('/signup')
 def signup():
     return render_template('signup.html')
     
-# @app.route('/')
-# def dashboard():
-#     posts = []
-#     for account in stormpath_manager.application.accounts:
-#         if account.custom_data.get('posts'):
-#             posts.extend(account.custom_data['posts'])
+# Defined organization registration processor
+@app.route('/oRegistration', methods=['GET', 'POST'])
+def organizationRegistration():
+    pass
 
-#     posts = sorted(posts, key=lambda k: k['date'], reverse=True)
-#     return render_template('profile.html', posts=posts)
+# Defined student registration processor 
+Register = Registration()
+asd = Registration()
+@app.route('/sRegistration', methods=['GET', 'POST'])
+def studentRegistration():
+    if request.method == 'GET':
+        return render_template(url_for('signup'))
+
+    errors = { 'SUCCESS': '', 'ERROR': '' }     # status return
+    # print request.form
+    
+    try:
+        _studentID = request.form['SJSUID']
+        _FirstName = request.form['FirstName']
+        _LastName = request.form['LastName']
+        _Password = request.form['Password']
+        _MiddleName = request.form['MiddleName']
+        _studentEmail = request.form['Email']
+
+        # Query stormpath if user exists
+        stormAccount = stormApp.accounts.search({
+            'email': _studentEmail
+        })        
+
+        if len(stormAccount) == 1:       # Account exists
+            errors['SUCCESS'] = '0'
+            errors['ERROR'] = 'Please verify inputs'
+
+            return json.dumps(errors)
+
+        try:
+            # Check if user exists in database
+            isUser = Register.existingUser(email=_studentEmail)
+            
+            if isUser:                  # Account exists
+                raise Exception("Please verify inputs")
+
+            else: 
+                # Validate user information is correct for database
+                Register._validate(studentID=_studentID, studentEmail=_studentEmail, 
+                    FirstName=_FirstName, LastName=_LastName, MiddleName=_MiddleName)
+
+                # Create a new Stormpath Account.
+                account = stormApp.accounts.create({
+                    'given_name': _FirstName,
+                    'middle_name': _MiddleName,
+                    'surname': _LastName,
+                    'email': _studentEmail,
+                    'password': _Password
+                })
+
+        except Exception as e:     # Stormpath requirements not met
+            errors['SUCCESS'] = '0'
+            errors['ERROR'] = str(e)
+
+            return json.dumps(errors)
+
+        # print account.email
+
+        # Create a student account in database.
+        status = Register._addStudent(studentID=_studentID, studentEmail=_studentEmail, 
+            FirstName=_FirstName, LastName=_LastName, MiddleName=_MiddleName)
+            
+        if status == True:
+            errors['SUCCESS'] = '1'
+
+        elif isinstance(status, dict):
+            errors['SUCCESS'] = '0'
+            errors['ERROR'] = status
 
 
-# @app.route('/add', methods=['POST'])
-# @login_required
-# def add_post():
-#     if not user.custom_data.get('posts'):
-#         user.custom_data['posts'] = []
+        return json.dumps(errors)
 
-#     user.custom_data['posts'].append({
-#         'date': datetime.utcnow().isoformat(),
-#         'title': request.form['title'],
-#         'text': request.form['text'],
-#     })
-#     user.save()
+    except Exception as err:
+        # Uncaught exception, return to register page
+        return         
 
-#     flash('New post successfully added.')
-#     return redirect(url_for('dashboard'))
-
-# @app.route('/logout')
-# def logout():
-#     logout_user()
-#     flash('You were logged out.')
-#     return redirect(url_for('dashboard'))
 
 
 @app.route('/orgprofile')
@@ -78,14 +137,10 @@ def profile():
 def widgets():
     return render_template('widgets.html')
 
-@app.route('/hometemplate')
-def hometemplate():
-    return render_template('hometemplate.html')
-
-
 @app.route('/studentsignup')
 def studentsignup():
     return render_template('studentsignup.html')
+
 
 @app.route('/studenttemplate')
 def studenttemplate():
