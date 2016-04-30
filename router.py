@@ -18,6 +18,7 @@ sys.path.insert(0, os.path.join(abspath, 'server-side'))
 
 # View modules
 from Registration import Registration
+from Authentication import Authentication
 from Student import Student
 
 __builtin__.DEBUG = True
@@ -40,16 +41,21 @@ def signup():
 def organizationRegistration():
     pass
 
-
 Register = Registration()
 # Defined student registration processor 
 @app.route('/sRegistration', methods=['GET', 'POST'])
 def studentRegistration():
+    """
+    The return is of the form: errors = { 'SUCCESS': '', 'ERROR': '' }
+    @Return:
+        - Success = 1 : Indicates successful registration
+        - Success = 0 : There was an error, reference ERROR key
+        - False: 500 system error
+
+    """
     if request.method == 'GET':
         return render_template(url_for('signup'))
 
-    # print request.form
-    
     try:
         _studentID = request.form['SJSUID']
         _FirstName = request.form['FirstName']
@@ -68,7 +74,16 @@ def studentRegistration():
         # Uncaught exception, return to register page
         return json.dumps(err)         
 
+# Render the user login page
+@app.route('/login')
+def login():
+    render_template('login.html')
 
+Authenticator = Authentication()
+# Defined user login processor
+@app.route('/userLogin', methods=['GET', 'POST'])
+def userLogin():
+    pass
 
 @app.route('/orgprofile')
 def orgprofile():

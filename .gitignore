@@ -1,2 +1,3 @@
-security/*
+security/config.json
+security/apiKey.properties
 server-side/*.pyc

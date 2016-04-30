@@ -13,4 +13,3 @@ $(".submitSingle").on("click", function() {
             console.log(response)
         }
     })
-});
