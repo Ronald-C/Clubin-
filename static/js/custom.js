@@ -1,3 +1,9 @@
+//IIFE for navTabs
+(function() {
+    
+
+}) ();
+
 $(".singleWell").on("click", function() {
     $("#singleModal").modal("show");
 });
@@ -15,10 +21,8 @@ $(".submitSingle").on("click", function() {
         url: '/sRegistration',
         data: $('#singleForm').serialize(),
         type: 'POST',
-
         success: function(response) {
             console.log(response)
-
         }
     })
 }); 
@@ -26,3 +30,18 @@ $(".submitSingle").on("click", function() {
 $("#singleModal").on("hidden.bs.modal", function() {
     $(this).prop("disabled", false).text("Send").addClass("btn-primary").removeClass("btn-success");
 });
+
+$("#formLogin").on("submit", function(event) {
+    event.preventDefault();
+    $.ajax({
+        url: '/userLogin',
+        data: $('#formLogin').serialize(),
+        type: 'POST',
+        success: function(response) {
+            console.log(response)
+        }
+    })
+
+})
+
+
