@@ -42,15 +42,15 @@ $("#singleModal").on("hidden.bs.modal", function() {
 });
 
 $("#formLogin").on("submit", function(event) {
-    event.preventDefault();
-    $.ajax({
-        url: '/userLogin',
-        data: $('#formLogin').serialize(),
-        type: 'POST',
-        success: function(response) {
-            console.log(response)
-        }
-    })
+    // event.preventDefault();
+    // $.ajax({
+    //     url: '/userLogin',
+    //     data: $('#formLogin').serialize(),
+    //     type: 'POST',
+    //     success: function(response) {
+    //         console.log(response)
+    //     }
+    // })
 
 })
 

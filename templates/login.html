@@ -25,13 +25,26 @@
                         <br />
                         <h3 class="box-title">Welcome Back</h3>
                     </div>
+
+                    <div id="flashZone">
+                        {% with messages = get_flashed_messages() %}
+                          {% if messages %}
+                            <ul class=flashes>
+                            {% for message in messages %}
+                              <li>{{ message }}</li>
+                            {% endfor %}
+                            </ul>
+                          {% endif %}
+                        {% endwith %}
+                    </div>
+
                     <div class="box-body">
 
 
                         <div class="row">
 
                             <div class="col-lg-offset-3 col-lg-6 well">
-                                 <form id="formLogin" class="form-horizontal" role="form">
+                                 <form action="{{ url_for('userLogin')}}" id="formLogin" class="form-horizontal" role="form">
                                   <div class="form-group">
                                     <label class="control-label col-sm-2" for="userLogin">Username:</label>
                                     <div class="col-sm-10">
