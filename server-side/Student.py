@@ -70,7 +70,7 @@ class Student(Database):
 						UPDATE MemberOf
 							SET MemberOf.`Active` = '1' 
 							WHERE MemberOf.`Student_fk` = %s AND MemberOf.`Organization_fk` = %s;
-						""" % (uidStudent, uidOrganization))
+						""", (uidStudent, uidOrganization))
 									
 					self.conn.commit()
 					return True
