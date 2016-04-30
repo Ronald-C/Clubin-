@@ -4,6 +4,13 @@ $(".singleWell").on("click", function() {
 
 
 $(".submitSingle").on("click", function() {
+
+    //Front end error checking with toast messaging.
+    
+
+
+
+    $(this).prop("disabled", true).text("Sent").removeClass("btn-primary").addClass("btn-success");
     $.ajax({
         url: '/sRegistration',
         data: $('#singleForm').serialize(),
@@ -11,6 +18,11 @@ $(".submitSingle").on("click", function() {
 
         success: function(response) {
             console.log(response)
+
         }
     })
+}); 
+
+$("#singleModal").on("hidden.bs.modal", function() {
+    $(this).prop("disabled", false).text("Send").addClass("btn-primary").removeClass("btn-success");
 });
