@@ -7,17 +7,17 @@ class Admin(Officer): # Admin class declaration
 
 			super(Admin, self)._init_() #super allows us to call functions from the Parent's Parent's class 
 
-	def addStudent(self, SJSUID, Email, FirstName, MiddleName, LastName): # addStudent function for Admin class
-		"""This function allows an Admin to sign a student up to an Organization"""
 
-		self.session.execute(""" 
-			INSERT INTO Student (SJSUID, Email, FirstName,MiddleName, LastName) 
-				VALUES (%s,%s,%s,%s,%s)""", (SJSUID,Email,FirstName, MiddleName,LastName)) 	# MySQL instance to add a student into the database
-		self.conn.commit()
-		
-	def deleteStudent(self, SJSUID):	# function to delete a student from the database
+	def deActivateStudent(self,uidStudent):
 
-		self.session.execute("""
-			DELETE from Student where SJSUID='%s'; """ % SJSUID)	# MySQL Instance of deleting a student using their Student ID to be removed from the database
+		self.session.execute("""UPDATE MemberOf
+							SET MemberOf.`Active` = '0' # changes the active status of the student based on thier UID
+							WHERE MemberOf.`Student_fk` = %s  # searches the student that needs to get deactivated
+						""" % (uidStudent))
 		self.conn.commit()
-	#this program should do basic functions thus far
+
+	def isTroubleMaker(self,uidStudent, uidOfficer, uidOrganization): # function that inserts into the black list for an organization
+		self.session.execute("""INSERT INTO TroubleMaker(Student_fk,Officer_fk,Organization_fk)
+								VALUES(%s,%s,%s)""" , (uidStudent,uidOfficer,uidOrganization))
+		self.conn.commit()
+	
