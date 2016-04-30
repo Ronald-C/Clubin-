@@ -1,7 +1,21 @@
 $(".singleWell").on("click", function() {
-	$("#singleModal").modal("show");
+    $("#singleModal").modal("show");
 });
 
 $(".submitSingle").on("click", function() {
-	alert("AJAX right here, dawg.")
+
+
+    $(".submitSingle").on("click", function() {
+        $.ajax({
+            url: '/sRegistration',
+            data: $('#singleForm').serialize(),
+            type: 'POST',
+
+            success: function(response) {
+                console.log(response)
+            }
+        })
+    });
+
+
 });
