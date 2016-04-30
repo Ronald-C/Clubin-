@@ -17,8 +17,7 @@ abspath = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(abspath, 'server-side'))
 
 # View modules
-from Registration import Registration
-from Authentication import Authentication
+from AccessControl import Registration, Authentication
 from Student import Student
 
 __builtin__.DEBUG = True
@@ -77,7 +76,7 @@ def studentRegistration():
 # Render the user login page
 @app.route('/login')
 def login():
-    render_template('login.html')
+    return render_template('login.html')
 
 Authenticator = Authentication()
 # Defined user login processor

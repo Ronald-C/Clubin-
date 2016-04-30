@@ -154,3 +154,17 @@ class Registration(Database):
 		# Print traceback if debugging ON
 		if DEBUG:
 			print traceback.format_exc()
+
+
+class Authentication(Database):
+	"""
+	A class that authenticates accounts for login
+	
+	"""
+	def __init__(self):
+		super(Authentication, self).__init__()
+		# Get connection & cursor from Database
+		self.conn = super(Authentication, self).connect()
+		self.session = super(Authentication, self).getSession()
+
+	
