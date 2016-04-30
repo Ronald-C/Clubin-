@@ -1,7 +1,11 @@
 # Officer entity (inherits Student)
 
+import traceback
+
 from Student import Student
 from Validater import Validate
+
+DEBUG = False
 
 class Officer(Student):
 	""" A class that defines an Officer entity
@@ -124,6 +128,14 @@ class Officer(Student):
 
 		return False
 
+	@staticmethod
+	def _printWarning(message, *args):
+		if DEBUG:
+			message = "[WARNING] " + str(message)
+			print message % args
 
-o = Officer()
-print o.leaveOffice('007810023', 'sce')
+	@staticmethod
+	def _printError(message, *args):
+		# Print traceback if debugging ON
+		if DEBUG:
+			print traceback.format_exc()

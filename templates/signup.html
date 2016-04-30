@@ -10,32 +10,119 @@
 	{{ super() }}
 
       <!-- Content Wrapper. Contains page content -->
-    <center>  <div class="content-wrapper" style="width:80%">
-        <!-- Content Header (Page header) -->
-        <section class="content-header">
-         <h2>Create an Account</h2>
-        </section>
-
-        <!-- Main content -->
-        <section class="content">
-          <div class="row" style="margin-top: 10px;">
+  <center>
+  <div class="content-wrapper" style="width:80%">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h2>Create an Account</h2>
+    </section>
+    <!-- Main content -->
+    <section class="content">
+        <div class="row" style="margin-top: 10px;">
             <div class="col-md-12">
-              <div class="box box-primary">
-                <div class="box-header">
-                  <h3 class="box-title">Are you an individual student looking to connect with organizations at SJSU, or are you an organization looking to create a webpage?</h3>
-                </div>
-                <div class="box-body">
-                    <div style="float:left;display: inline-block;"><h4>Student</h4>
-                        <a href="{{ url_for('studentsignup')}}"><img src="http://www.clker.com/cliparts/c/7/W/l/I/4/orangeman-joy-simple.svg" width="400px" height="auto"></a></div>
-                        <div style="float:right; display: inline-block;"><h4>Organization</h4>
-                            <a href="{{ url_for('orgsignup')}}"><img src="http://images.clipartpanda.com/group-clipart-group-md.png" width="300px" height="auto"></a></div>
-                </div><!-- /.box-body -->
-              </div><!-- /.box -->
-            </div><!-- /.col -->
-          </div><!-- /.row -->
+                <div class="box box-primary">
+                    <div class="box-header">
+                        <h3 class="box-title">Are you an individual student looking to connect with organizations at SJSU, or are you an organization looking to create a webpage?</h3>
+                    </div>
+                    <div class="box-body">
 
-        </section><!-- /.content -->
-      </div><!-- /.content-wrapper -->
-</center>
+
+                        <div class="row">
+
+                            <div class="col-lg-offset-2 col-lg-4 grow singleWell">
+                                <div class="well well-square text-center">
+                                    <h4>Student</h4>
+                                    <img class="inheritPic" src="http://www.clker.com/cliparts/c/7/W/l/I/4/orangeman-joy-simple.svg" />
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="well well-square text-center grow">
+                                    <h4>Organization</h4>
+                                    <img class="inheritPic" src="http://images.clipartpanda.com/group-clipart-group-md.png" />
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </section>
+    <!-- /.content -->
+
+    <!-- Modal Zone -->
+
+
+    <!-- Single Person Modal -->
+    <div class="modal fade" id="singleModal" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Hello there, New Person</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+
+                        <div class="col-lg-offset-2 col-lg-8">
+
+                            <form id="singleForm" role="form">
+
+                                <div class="form-group">
+                                    <label for="FirstNameSingle">First Name</label>
+                                    <input id="FirstNameSingle" class="form-control" type="text" name="FirstName"></input>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="MiddleNameSingle">Middle Name</label>
+                                    <input id="MiddleNameSingle" class="form-control" type="text" name="MiddleName"></input>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="LastNameSingle">Last Name</label>
+                                    <input id="LastNameSingle" class="form-control" type="text" name="LastName"></input>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="SJSUIDSingle">SJSUID</label>
+                                    <input id="SJSUIDSingle" class="form-control" type="text" name="SJSUID"></input>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="emailSingle">E-mail</label>
+                                    <input id="emailSingle" class="form-control" type="email" name="Email"></input>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="PasswordSingle">Password</label>
+                                    <input id="PasswordSingle" class="form-control" type="password" name="Password"></input>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary submitSingle">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- End Modal Zone -->
+</div>
+<!-- /.content-wrapper -->
+
+  </center>
 
  {%endblock%}

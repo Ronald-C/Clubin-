@@ -7,7 +7,7 @@ from Connector import Database
 from Validater import Validate
 from CustomException import ValidatorException
 
-DEBUG = True 	# Set this variable for console print
+DEBUG = False
 
 class Student(Database):
 	"""	A class the defines the Student entity  
@@ -442,14 +442,12 @@ class Student(Database):
 
 	@staticmethod
 	def _printWarning(message, *args):
-		global DEBUG
-		if 'DEBUG' in globals() and DEBUG:
+		if DEBUG:
 			message = "[WARNING] " + str(message)
 			print message % args
 
 	@staticmethod
 	def _printError(message, *args):
-		global DEBUG
 		# Print traceback if debugging ON
-		if 'DEBUG' in globals() and DEBUG:
+		if DEBUG:
 			print traceback.format_exc()

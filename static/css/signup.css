@@ -1,0 +1,25 @@
+body {
+	background-color: orange !important;
+}
+
+p {
+	font-weight: 100px;
+}
+
+.well-square {
+	background-color: #F0F8FF !important;
+	height: 300px;
+	width: 300px;
+	padding: 16px;
+	border-radius: 16px;
+	cursor: pointer;
+}
+
+.inheritPic {
+	max-height: 90%;
+	max-width: 90%;
+}
+
+.grow { transition: all .1s ease-in-out; }
+.grow:hover { transform: scale(1.05); }
+
