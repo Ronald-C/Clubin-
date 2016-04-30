@@ -1,6 +1,16 @@
 //IIFE for navTabs
 (function() {
-    
+    var pathTab = {};
+    pathTab["signup"] = "signUpTab";
+    pathTab["login"] = "loginTab";
+
+    for( var key in pathTab) {
+            if( window.location.href.indexOf( key ) > -1 ){
+                $("#" + pathTab[key] ).addClass("active");
+                return;
+        }
+    }
+        $("#homeTab").addClass("active");
 
 }) ();
 
