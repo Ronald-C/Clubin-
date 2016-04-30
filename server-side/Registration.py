@@ -1,12 +1,25 @@
 # Registration helper
 
 import traceback
+from stormpath.client import Client
+from os import environ, path
 
 from Connector import Database
 from Validater import Validate
 from CustomException import ValidatorException
 
 DEBUG = True
+
+abspath = path.dirname(path.abspath(__file__))
+
+# Create a new Stormpath Client.
+apiKeys = path.join(abspath, '../security/apiKey.properties')
+client = Client(api_key_file_location=apiKeys)
+href = environ['STORMPATH_APPLICATION_HREF']
+
+# Retrieve our application
+stormApp = client.applications.get(href)
+
 
 class Registration(Database):
 	""" A class that registers new student accounts
@@ -20,12 +33,23 @@ class Registration(Database):
 		self.conn = super(Registration, self).connect()
 		self.session = super(Registration, self).getSession()
 
-	def _addStudent(self, studentID, studentEmail, FirstName, LastName, MiddleName=None):
-		try:
-			# Validate method arguments
-			self._validate(studentID, studentEmail, FirstName, LastName, MiddleName)
+	def _addStudent(self, studentID, studentEmail, FirstName, LastName, Password, MiddleName=None):
+		errors = { 'SUCCESS': '', 'ERROR': '' }     # status return
 
-			exist = self.existingUser(studentEmail)		# Check if existing user
+		try:
+			# Check stormpath for existance of account
+			self.__verifyStormpathAccount(studentEmail)
+
+			# Validate method arguments
+			Validate({
+				'SJSUID': studentID,
+				'FirstName': FirstName,
+				'LastName': LastName,
+				'MiddleName': MiddleName,
+				'Email': studentEmail
+			})
+
+			exist = self.__existingUser(studentEmail)		# Check if existing user
 
 			if not exist:
 				# Insert student entity
@@ -35,10 +59,33 @@ class Registration(Database):
 						""", (studentID, studentEmail, FirstName, LastName, MiddleName) ) 
 
 				self.conn.commit()
-				return True
+
+				try:
+					 # Create a new Stormpath Account.
+					account = stormApp.accounts.create({
+					    'given_name': FirstName,
+					    'middle_name': MiddleName,
+					    'surname': LastName,
+					    'email': studentEmail,
+					    'password': Password
+					})
+
+				except Exception as e:
+					# Stormpath.accounts.create raises error on failure
+					errors['SUCCESS'] = '0'
+					errors['ERROR'] = str(e)
+
+					raise TypeError(errors)
+
+
+				errors['SUCCESS'] = '1'
+				return errors
 
 			else:	# Student entity already exists
-				raise TypeError("Student already registered")
+				errors['SUCCESS'] = '0'
+				errors['ERROR'] = 'Please verify inputs'
+
+				raise TypeError(errors)
 
 		except (TypeError, ValidatorException) as e:
 			self.conn.rollback()
@@ -46,6 +93,11 @@ class Registration(Database):
 
 			self._printWarning("%s", e)
 
+			if isinstance(e, ValidatorException):
+				errors['SUCCESS'] = '0'
+				errors['ERROR'] = str(e)
+
+				return errors
 			#
 			# TODO:
 			#	return message to frontend of error
@@ -54,31 +106,14 @@ class Registration(Database):
 			return e
 
 		except Exception as e:
-			print 'asd'
 			self.conn.rollback()
 			
 			# A non-existing organization was specified!!!
 			self._printError("%s", e)
 			return False
-
-
-	def _validate(self, studentID, studentEmail, FirstName, LastName, MiddleName=None):
-		try:	
-			Validate({
-				'SJSUID': studentID,
-				'FirstName': FirstName,
-				'LastName': LastName,
-				'MiddleName': MiddleName,
-				'Email': studentEmail
-			})
 		
-		except ValidatorException as e:
-			self._printWarning("%s", e)
 
-			raise e
-
-
-	def existingUser(self, email):
+	def __existingUser(self, email):
 		self.session.execute("""
 			SELECT * FROM Student WHERE Student.`Email` = %s;
 			""", email)
@@ -91,11 +126,28 @@ class Registration(Database):
 		return False
 
 
+	def __verifyStormpathAccount(self, studentEmail):
+		# Query stormpath if user exists
+		stormAccount = stormApp.accounts.search({
+		    'email': studentEmail
+		})        
+
+		if len(stormAccount) == 1:       # Account exists
+			errors['SUCCESS'] = '0'
+			errors['ERROR'] = 'Please verify inputs'
+
+			raise TypeError(errors)
+		
+		else:
+			return None
+
+
 	@staticmethod
 	def _printWarning(message, *args):
 		if DEBUG:
 			message = "[WARNING] " + str(message)
 			print message % args
+
 
 	@staticmethod
 	def _printError(message, *args):

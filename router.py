@@ -11,7 +11,6 @@ from flask import (
     Flask, abort, flash, redirect, render_template,
     request, url_for,
 )
-from stormpath.client import Client
 
 # Add directory to path to access modules outside of ./
 abspath = os.path.dirname(os.path.abspath(__file__))
@@ -24,12 +23,7 @@ from Student import Student
 __builtin__.DEBUG = True
 app = Flask('Clubin')      # Flask app
 
-# Create a new Stormpath Client.
-apiKeys = os.path.join(abspath, 'security/apiKey.properties')
-client = Client(api_key_file_location=os.path.expanduser(apiKeys))
-# Retrieve our application
-href = 'https://api.stormpath.com/v1/applications/77J8SNb4s5dMV8eJQ4Ujw1'
-stormApp = client.applications.get(href)
+##########################################################
 
 # Defined landing page
 @app.route('/')
@@ -46,15 +40,14 @@ def signup():
 def organizationRegistration():
     pass
 
-# Defined student registration processor 
+
 Register = Registration()
-asd = Registration()
+# Defined student registration processor 
 @app.route('/sRegistration', methods=['GET', 'POST'])
 def studentRegistration():
     if request.method == 'GET':
         return render_template(url_for('signup'))
 
-    errors = { 'SUCCESS': '', 'ERROR': '' }     # status return
     # print request.form
     
     try:
@@ -65,63 +58,15 @@ def studentRegistration():
         _MiddleName = request.form['MiddleName']
         _studentEmail = request.form['Email']
 
-        # Query stormpath if user exists
-        stormAccount = stormApp.accounts.search({
-            'email': _studentEmail
-        })        
-
-        if len(stormAccount) == 1:       # Account exists
-            errors['SUCCESS'] = '0'
-            errors['ERROR'] = 'Please verify inputs'
-
-            return json.dumps(errors)
-
-        try:
-            # Check if user exists in database
-            isUser = Register.existingUser(email=_studentEmail)
-            
-            if isUser:                  # Account exists
-                raise Exception("Please verify inputs")
-
-            else: 
-                # Validate user information is correct for database
-                Register._validate(studentID=_studentID, studentEmail=_studentEmail, 
-                    FirstName=_FirstName, LastName=_LastName, MiddleName=_MiddleName)
-
-                # Create a new Stormpath Account.
-                account = stormApp.accounts.create({
-                    'given_name': _FirstName,
-                    'middle_name': _MiddleName,
-                    'surname': _LastName,
-                    'email': _studentEmail,
-                    'password': _Password
-                })
-
-        except Exception as e:     # Stormpath requirements not met
-            errors['SUCCESS'] = '0'
-            errors['ERROR'] = str(e)
-
-            return json.dumps(errors)
-
-        # print account.email
-
         # Create a student account in database.
         status = Register._addStudent(studentID=_studentID, studentEmail=_studentEmail, 
-            FirstName=_FirstName, LastName=_LastName, MiddleName=_MiddleName)
+            FirstName=_FirstName, LastName=_LastName, Password=_Password, MiddleName=_MiddleName)
             
-        if status == True:
-            errors['SUCCESS'] = '1'
-
-        elif isinstance(status, dict):
-            errors['SUCCESS'] = '0'
-            errors['ERROR'] = status
-
-
-        return json.dumps(errors)
+        return json.dumps(status)
 
     except Exception as err:
         # Uncaught exception, return to register page
-        return         
+        return json.dumps(err)         
 
 
 
