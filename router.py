@@ -151,7 +151,6 @@ def catch_all(path):
 
 
 if __name__ == '__main__':
-<<<<<<< HEAD
     DEFAULT_HOST = '127.0.0.1'      # Set env to config host/port
     DEFAULT_PORT = 5000
 
@@ -162,7 +161,4 @@ if __name__ == '__main__':
         DEFAULT_HOST = str(os.environ['HOST'])
 
     app.run(host=DEFAULT_HOST, port=DEFAULT_PORT)
-=======
-    app.run(debug=True)
-{% extends "hometemplate.html" %}
->>>>>>> Joanna-frontend
+
