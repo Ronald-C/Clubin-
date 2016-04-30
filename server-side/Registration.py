@@ -1,5 +1,7 @@
 # Registration helper
 
+import traceback
+
 from Connector import Database
 from Validater import Validate
 from CustomException import ValidatorException
@@ -18,21 +20,13 @@ class Registration(Database):
 		self.conn = super(Registration, self).connect()
 		self.session = super(Registration, self).getSession()
 
-	def addStudent(self, studentID, studentEmail, FirstName, LastName, MiddleName=None):
+	def _addStudent(self, studentID, studentEmail, FirstName, LastName, MiddleName=None):
 		try:
 			# Validate method arguments
-			Validate({
-				'SJSUID': studentID,
-				'FirstName': FirstName,
-				'LastName': LastName,
-				'MiddleName': MiddleName
-			})
+			self._validate(studentID, studentEmail, FirstName, LastName, MiddleName)
 
-			self.session.execute("""
-				SELECT * FROM Student WHERE Student.`SJSUID` = %s;
-				""", studentID)
+			exist = self.existingUser(studentEmail)		# Check if existing user
 
-			exist = self.session.fetchone()
 			if not exist:
 				# Insert student entity
 				self.session.execute("""
@@ -49,6 +43,7 @@ class Registration(Database):
 		except (TypeError, ValidatorException) as e:
 			self.conn.rollback()
 			# Unknown studentID or organizationName was encountered
+
 			self._printWarning("%s", e)
 
 			#
@@ -59,21 +54,49 @@ class Registration(Database):
 			return e
 
 		except Exception as e:
+			print 'asd'
 			self.conn.rollback()
 			
 			# A non-existing organization was specified!!!
 			self._printError("%s", e)
+			return False
+
+
+	def _validate(self, studentID, studentEmail, FirstName, LastName, MiddleName=None):
+		try:	
+			Validate({
+				'SJSUID': studentID,
+				'FirstName': FirstName,
+				'LastName': LastName,
+				'MiddleName': MiddleName,
+				'Email': studentEmail
+			})
+		
+		except ValidatorException as e:
+			self._printWarning("%s", e)
+
+
+	def existingUser(self, email):
+		self.session.execute("""
+			SELECT * FROM Student WHERE Student.`Email` = %s;
+			""", email)
+
+		exist = self.session.fetchone()
+
+		if exist:
+			return True
+
+		return False
+
 
 	@staticmethod
 	def _printWarning(message, *args):
-		global DEBUG
-		if 'DEBUG' in globals() and DEBUG:
+		if DEBUG:
 			message = "[WARNING] " + str(message)
 			print message % args
 
 	@staticmethod
 	def _printError(message, *args):
-		global DEBUG
 		# Print traceback if debugging ON
-		if 'DEBUG' in globals() and DEBUG:
+		if DEBUG:
 			print traceback.format_exc()

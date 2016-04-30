@@ -110,5 +110,19 @@ class Validate(object):
 		if not validStatus:
 			errors['ValidatorException'] = self.v.errors
 
+
+		# Verify SJSUID is numeric
+		if 'SJSUID' in document:
+			numericSJSUID = str(document['SJSUID']).isdigit()
+			
+			if not numericSJSUID:
+				if 'ValidatorException' in errors:
+
+					errors['ValidatorException']['SJSUID'] = ['Not numeric',
+						errors['ValidatorException']['SJSUID']]
+
+				else:
+					errors['ValidatorException'] = {'SJSUID': 'Not numeric'}
+
 		if errors:
 			raise ValidatorException(errors)
