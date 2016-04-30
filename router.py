@@ -78,7 +78,6 @@ def studentRegistration():
 def login():
     return render_template('login.html')
 
-Authenticator = Authentication()
 # Defined user login processor
 @app.route('/userLogin', methods=['GET', 'POST'])
 def userLogin():
