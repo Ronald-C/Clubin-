@@ -69,7 +69,13 @@ def studentRegistration():
             FirstName=_FirstName, LastName=_LastName, Password=_Password, MiddleName=_MiddleName)
 
         if isinstance(status, dict):
-            return json.dumps(status)
+            
+            if status['SUCCESS'] == '1':     # OK
+                return redirect(url_for('index'))
+
+            else:
+                flash(status)
+                return redirect(url_for('studentRegistration'))
 
         else:
             return redirect('errors/500.html')
@@ -95,7 +101,7 @@ def userLogin():
         _password = request.form['Password']
 
         status = Authenticator._authorize(username=_username, password=_password)
-        if 'SUCCESS' in status:
+        if isinstance(status, dict):
             
             if status['SUCCESS'] == '1':    # OK
                 return render_template('studenthome.html')
