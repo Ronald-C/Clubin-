@@ -47,13 +47,13 @@ class Validate(object):
 		'FirstName': {
 			'required': True,
 			'type': 'string',
-			'minlength': 3,
+			'minlength': 2,
 			'maxlength': 45
 		},
 		'LastName': {
 			'required': True,
 			'type': 'string',
-			'minlength': 3,
+			'minlength': 2,
 			'maxlength': 45
 		},
 		'MiddleName': {		# Optional 
