@@ -68,14 +68,8 @@ def studentRegistration():
         status = Register._addStudent(studentID=_studentID, studentEmail=_studentEmail, 
             FirstName=_FirstName, LastName=_LastName, Password=_Password, MiddleName=_MiddleName)
 
-        if isinstance(status, dict):
-            
-            if status['SUCCESS'] == '1':     # OK
-                return redirect(url_for('index'))
-
-            else:
-                flash(status)
-                return redirect(url_for('signup'))
+        if isinstance(status, dict):            
+            return json.dumps(status)
 
         else:
             return redirect('errors/500.html')
