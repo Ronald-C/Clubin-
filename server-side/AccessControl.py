@@ -37,9 +37,6 @@ class Registration(Database):
 		errors = { 'SUCCESS': '', 'ERROR': '' }     # status return
 
 		try:
-			# Check stormpath for existance of account
-			self.__verifyStormpathAccount(studentEmail)
-
 			# Validate method arguments
 			Validate({
 				'SJSUID': studentID,
@@ -48,15 +45,24 @@ class Registration(Database):
 				'MiddleName': MiddleName,
 				'Email': studentEmail
 			})
+			
+			# Check stormpath for existance of account
+			stormAccount = stormApp.accounts.search({
+			    'email': studentEmail
+				})        
+
+			if len(stormAccount) >= 1:       # Account exists
+				raise TypeError('Please verify inputs')
+
 
 			exist = self.__existingUser(studentEmail)		# Check if existing user
 
 			if not exist:
 				# Insert student entity
 				self.session.execute("""
-				INSERT INTO `Student` (`SJSUID`, `Email`, `FirstName`, `LastName`,
+					INSERT INTO `Student` (`SJSUID`, `Email`, `FirstName`, `LastName`,
 						`MiddleName`) VALUES (%s, %s, %s, %s, %s);
-						""", (studentID, studentEmail, FirstName, LastName, MiddleName) ) 
+					""", (studentID, studentEmail, FirstName, LastName, MiddleName) ) 
 
 				self.conn.commit()
 
@@ -70,45 +76,31 @@ class Registration(Database):
 					    'password': Password
 					})
 
+					# Everything is OK
+					errors['SUCCESS'] = '1'
+					return errors
+
 				except Exception as e:
 					# Stormpath.accounts.create raises error on failure
-					errors['SUCCESS'] = '0'
-					errors['ERROR'] = str(e)
+					raise TypeError(str(e))
 
-					raise TypeError(errors)
-
-
-				errors['SUCCESS'] = '1'
-				return errors
-
-			else:	# Student entity already exists
-				errors['SUCCESS'] = '0'
-				errors['ERROR'] = 'Please verify inputs'
-
-				raise TypeError(errors)
+			else:
+				# Student entity already exists
+				raise TypeError('Please verify inputs')
 
 		except (TypeError, ValidatorException) as e:
 			self.conn.rollback()
-			# Unknown studentID or organizationName was encountered
 
 			self._printWarning("%s", e)
 
-			if isinstance(e, ValidatorException):
-				errors['SUCCESS'] = '0'
-				errors['ERROR'] = str(e)
+			errors['SUCCESS'] = '0'
+			errors['ERROR'] = str(e)
 
-				return errors
-			#
-			# TODO:
-			#	return message to frontend of error
-			#	return to frontend high priority validation errors
-			# 
-			return e
+			return dict(errors)
 
 		except Exception as e:
 			self.conn.rollback()
 			
-			# A non-existing organization was specified!!!
 			self._printError("%s", e)
 			return False
 		
@@ -125,29 +117,11 @@ class Registration(Database):
 
 		return False
 
-
-	def __verifyStormpathAccount(self, studentEmail):
-		# Query stormpath if user exists
-		stormAccount = stormApp.accounts.search({
-		    'email': studentEmail
-		})        
-
-		if len(stormAccount) == 1:       # Account exists
-			errors['SUCCESS'] = '0'
-			errors['ERROR'] = 'Please verify inputs'
-
-			raise TypeError(errors)
-		
-		else:
-			return None
-
-
 	@staticmethod
 	def _printWarning(message, *args):
 		if DEBUG:
 			message = "[WARNING] " + str(message)
 			print message % args
-
 
 	@staticmethod
 	def _printError(message, *args):
@@ -167,4 +141,71 @@ class Authentication(Database):
 		self.conn = super(Authentication, self).connect()
 		self.session = super(Authentication, self).getSession()
 
-	
+	def _authorize(self, username, password):
+		errors = { 'SUCCESS': '', 'ERROR': '' }     # status return
+
+		username = str(username).strip()
+		password = str(password).strip()
+
+		# Is username SJSUID or email ???
+		isSJSUID = username.replace(' ', '').isdigit()
+
+		try:
+			# Check if the user is present
+			if isSJSUID:
+
+				Validate({'SJSUID': username})
+
+				self.session.execute("""
+					SELECT * FROM Student WHERE Student.`SJSUID` = %s;
+					""", username)
+
+				exist = self.session.fetchone()
+				if exist and 'Email' in exist:
+					username = exist['Email']
+
+			else:	# username is an email
+				Validate({'Email': username})
+
+				self.session.execute("""
+					SELECT * FROM Student WHERE Student.`Email` = %s;
+					""", username)
+
+				exist = self.session.fetchone()			# user is in database
+			
+			# Confirm stormpath account
+			if exist:
+				try:
+					# Stormpath raises error on failure
+					a = stormApp.authenticate_account(username, password).account
+					if a.email:
+						errors['SUCCESS'] = '1'
+
+						return errors
+
+				except Exception as e:
+					raise TypeError('Invalid username or password')
+
+		except (TypeError, ValidatorException) as e:
+			self._printWarning("%s", e)
+
+			errors['SUCCESS'] = '0'
+			errors['ERROR'] = str(e)
+
+			return dict(errors)
+
+		except Exception as e:
+			self._printError("%s", e)
+			return False
+
+	@staticmethod	
+	def _printWarning(message, *args):
+		if DEBUG:
+			message = "[WARNING] " + str(message)
+			print message % args
+
+	@staticmethod
+	def _printError(message, *args):
+		# Print traceback if debugging ON
+		if DEBUG:
+			print traceback.format_exc()

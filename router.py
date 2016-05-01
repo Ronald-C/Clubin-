@@ -9,7 +9,7 @@ import __builtin__
 import json
 from flask import (
     Flask, abort, flash, redirect, render_template,
-    request, url_for,
+    request, url_for, session
 )
 
 # Add directory to path to access modules outside of ./
@@ -20,8 +20,9 @@ sys.path.insert(0, os.path.join(abspath, 'server-side'))
 from AccessControl import Registration, Authentication
 from Student import Student
 
-__builtin__.DEBUG = True
-app = Flask('Clubin')      # Flask app
+__builtin__.DEBUG = True                        # Global debug setting
+app = Flask('Clubin')                           # Flask app
+app.config['SECRET_KEY'] = 'super secret key'   # session variable
 
 ##########################################################
 
@@ -53,7 +54,7 @@ def studentRegistration():
 
     """
     if request.method == 'GET':
-        return render_template(url_for('signup'))
+        return redirect(url_for('signup'))
 
     try:
         _studentID = request.form['SJSUID']
@@ -66,22 +67,49 @@ def studentRegistration():
         # Create a student account in database.
         status = Register._addStudent(studentID=_studentID, studentEmail=_studentEmail, 
             FirstName=_FirstName, LastName=_LastName, Password=_Password, MiddleName=_MiddleName)
-            
-        return json.dumps(status)
+
+        if isinstance(status, dict):
+            return json.dumps(status)
+
+        else:
+            return redirect('errors/500.html')
 
     except Exception as err:
-        # Uncaught exception, return to register page
-        return json.dumps(err)         
+        # Default exception handler
+        return render_template('errors/500.html')         
 
 # Render the user login page
 @app.route('/login')
 def login():
     return render_template('login.html')
 
+Authenticator = Authentication()
 # Defined user login processor
 @app.route('/userLogin', methods=['GET', 'POST'])
 def userLogin():
-    pass
+    if request.method == 'GET':
+        return redirect(url_for('login'))
+
+    try:
+        _username = request.form['Username']
+        _password = request.form['Password']
+
+        status = Authenticator._authorize(username=_username, password=_password)
+        if 'SUCCESS' in status:
+            
+            if status['SUCCESS'] == '1':    # OK
+                return render_template('studenthome.html')
+
+            else:           # Errors caught
+                flash(status)               
+                return redirect(url_for('login'))
+        
+        else:       # Something bad happened
+            return render_template('errors/500.html')
+
+    except Exception as e:
+        # Default exception handler
+        return render_template('errors/500.html') 
 
 @app.route('/orgprofile')
 def orgprofile():
