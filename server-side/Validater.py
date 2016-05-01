@@ -1,8 +1,10 @@
 # Validator
 
+import re
+import sys
 from cerberus import Validator
 
-from CustomException import *
+from CustomException import ValidatorException
 
 class Validate(Validator):
 #class MyValidator(Validator):
@@ -11,48 +13,64 @@ class Validate(Validator):
 	Takes json structured inputs to validate, raising errors if any
 	A non-return indicates everything is valid
 	"""
+<<<<<<< HEAD
 	SJSUID = {
+=======
+
+	SCHEMA_RULES = {
+>>>>>>> master
 		'SJSUID': {
 			'required': True,
 			'type': 'string',
 			'maxlength': 9,
 			'minlength': 9
-		}
-	}
-
-	OrganizationName = {
+		},
 		'OrganizationName': {
 			'required': True,
 			'type': 'string',
 			'minlength': 3,
 			'maxlength': 45
-		}
-	}
-
-	StudentComment = {
+		},
 		'StudentComment': {
 			'required': True,
 			'type': 'string',
 			'minlength': 2,
 			'maxlength': 200
-		}
-	}
-
-	ArticleTitle = {
+		},
 		'ArticleTitle': {
 			'required': True,
 			'type': 'string',
 			'minlength': 8,
 			'maxlength': 100
-		}
-	}
-
-	ArticleContent = {
+		},
 		'ArticleContent': {
 			'required': True,
 			'type': 'string',
 			'minlength': 8,
 			'maxlength': 4000
+		},
+		'FirstName': {
+			'required': True,
+			'type': 'string',
+			'minlength': 3,
+			'maxlength': 45
+		},
+		'LastName': {
+			'required': True,
+			'type': 'string',
+			'minlength': 3,
+			'maxlength': 45
+		},
+		'MiddleName': {		# Optional 
+			'nullable': True,
+			'type': 'string',
+			'maxlength': 25
+		},
+		'Department': {
+			'required': True,
+			'type': 'string',
+			'minlength': 3,
+			'maxlength': 45
 		}
 	}
 
@@ -66,36 +84,36 @@ class Validate(Validator):
 		if not isinstance(document, dict):
 			raise TypeError("Validate document expect class dict")
 
-		schema = {}
+		schema = {}		# The rules that dictate format of document
+		errors = {}		# Any errors as a result of validation
 
-		# Build schema rules
-		for key in document.keys():
-			if key is 'SJSUID':
-				schema['SJSUID'] = Validate.SJSUID['SJSUID']
-
-			elif key is 'OrganizationName':
-				schema['OrganizationName'] = Validate.OrganizationName['OrganizationName']
-
-			elif key is 'ArticleID':
-				schema['ArticleID'] = Validate.ArticleID['ArticleID']
-
-			elif key is 'StudentComment':
-				schema['StudentComment'] = Validate.StudentComment['StudentComment']
+		# Verify email formatting
+		if 'Email' in document:
+			EMAIL_REGEX = re.compile(r"^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$")
 			
-			elif key is 'ArticleTitle':
-				schema['ArticleTitle'] = Validate.ArticleTitle['ArticleTitle']
+			if not EMAIL_REGEX.match(document['Email']):
+				errors['EmailValidation'] = "Email does not meet requirements"
 
-			elif key is 'ArticleContent':
-				schema['ArticleContent'] = Validate.ArticleContent['ArticleContent']	
-			# 
-			# NOTE:
-			# 	ADD HERE, if extending rules schema
-			# 
+			del document['Email']	# Remove Email in document before validation
 
-		if not schema:	# Check if empty rules list
+		# Build schema rules if exists
+		for key, value in document.iteritems():	
+			if key in Validate.SCHEMA_RULES:
+				schema[key] = Validate.SCHEMA_RULES[key]
+
+			else:
+				raise TypeError("Validation rule not found!!!!")
+				sys.exit(3)
+
+		# Check if empty rules list before validating
+		if not schema:
 			raise TypeError("Validating against empty schema")
+		else:
+			validStatus = self.v.validate(document, schema)
 
-		validStatus = self.v.validate(document, schema)
+		# Status contains False if failed to meet rules
+		if not validStatus:
+			errors['ValidatorException'] = self.v.errors
 
-		if not validStatus:		# Status contains False if failed to meet rules
-			raise ValidatorException({'ValidatorException': self.v.errors})
+		if errors:
+			raise ValidatorException(errors)

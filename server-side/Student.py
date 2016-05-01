@@ -1,7 +1,11 @@
 # Student entity
 
 import traceback
+<<<<<<< HEAD
 #import re
+=======
+import re
+>>>>>>> master
 
 from Connector import Database
 from Validater import Validate
@@ -367,7 +371,11 @@ class Student(Database):
 		except Exception as e:
 			self.conn.rollback()
 			
+<<<<<<< HEAD
 			# A 3-existing organization was specified!!!
+=======
+			# A non-existing organization was specified!!!
+>>>>>>> master
 			self._printError("%s", e)
 
 	def _isStudentActiveMember(self, uidStudent, uidOrganization):

@@ -1,0 +1,10 @@
+{
+    "signupStudent": {
+        "fname": "",
+        "mname": "",
+        "lname": "",
+        "sid": "",
+        "email": "",
+        "password": "",
+    }
+}

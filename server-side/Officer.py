@@ -90,17 +90,28 @@ class Officer(Student):
 			self.conn.commit()
 			return True
 
+<<<<<<< HEAD
 		#except (TypeError, ValidaterException) as e:
 		#	self.conn.rollback()
 			# Unknown studentID or organizationName was encountered
 		#	self._printWarning("%s", e)
+=======
+		except (TypeError, ValidatorException) as e:
+			self.conn.rollback()
+			# Unknown studentID or organizationName was encountered
+			self._printWarning("%s", e)
+>>>>>>> master
  
 			#
 			# TODO:
 			#	return message to frontend of error
 			#	return to frontend high priority validation errors
 			# 
+<<<<<<< HEAD
 		#	return e
+=======
+			return e
+>>>>>>> master
 
 		except Exception as e:
 			self.conn.rollback()
@@ -123,3 +134,10 @@ class Officer(Student):
 			return True;
 
 		return False
+<<<<<<< HEAD
+=======
+
+
+o = Officer()
+print o.leaveOffice('007810023', 'sce')
+>>>>>>> master
