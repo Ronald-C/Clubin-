@@ -75,7 +75,7 @@ def studentRegistration():
 
             else:
                 flash(status)
-                return redirect(url_for('studentRegistration'))
+                return redirect(url_for('signup'))
 
         else:
             return redirect('errors/500.html')
