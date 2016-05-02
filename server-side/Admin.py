@@ -11,19 +11,21 @@ class Admin(Officer): # Admin class declaration
 	def deActivateStudent(self,uidStudent):
 
 		self.session.execute("""UPDATE MemberOf
-							SET MemberOf.`Active` = '0' # changes the active status of the student based on thier UID
-							WHERE MemberOf.`Student_fk` = %s  # searches the student that needs to get deactivated
+					SET MemberOf.`Active` = '0' # changes the active status of the student based on thier UID
+					WHERE MemberOf.`Student_fk` = %s  # searches the student that needs to get deactivated
 						""" % (uidStudent))
 		self.conn.commit()
 
 	def isTroubleMaker(self,uidStudent, uidOfficer, uidOrganization): # function that inserts into the black list for an organization
 		self.session.execute("""INSERT INTO TroubleMaker(Student_fk,Officer_fk,Organization_fk)
-								VALUES(%s,%s,%s)""" , (uidStudent,uidOfficer,uidOrganization))
+					VALUES(%s,%s,%s)""" , (uidStudent,uidOfficer,uidOrganization))
 		self.conn.commit()
 	
 	def orgInfo(self,orgID,orgName,Descrip,Building,RoomNumber): # updating an organization info
 		self.session.execute("""UPDATE Organization 
-								SET Organization.`OrganizationName` = %s, Organization.`Description` = %s, Organization.`Building` = %s ,Organization.`RoomNumber` = %s  
-								WHERE Organization.`OrganizationID` = %s
-								""", (orgID,orgName,Descrip,Building,RoomNumber)) # updates Name,Description,Building, RoomNumber based on the orgID number
+					SET Organization.`OrganizationName` = %s, Organization.`Description` = %s,
+					Organization.`Building` = %s ,
+					Organization.`RoomNumber` = %s  
+					WHERE Organization.`OrganizationID` = %s
+					""", (orgID,orgName,Descrip,Building,RoomNumber)) # updates Name,Description,Building, RoomNumber based on the orgID number
 		self.conn.commit()
