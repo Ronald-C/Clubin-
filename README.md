@@ -7,3 +7,9 @@
 3. Configure MySQL authorization in **security/config.json**
 4. Resolve Python dependencies `sudo pip install -r requirements.txt`
 5. Run `python router.py`
+
+###Dependencies
+* MySQL `sudo apt-get install mysql-server-5.6`
+
+###Optional 
+* MySQL Workbench `sudo apt-get install mysql-workbench`
