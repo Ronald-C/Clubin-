@@ -1,7 +1,11 @@
 # Officer entity (inherits Student)
 
+import traceback
+
 from Student import Student
 from Validater import Validate
+
+DEBUG = False
 
 class Officer(Student):
 	""" A class that defines an Officer entity
@@ -90,28 +94,17 @@ class Officer(Student):
 			self.conn.commit()
 			return True
 
-<<<<<<< HEAD
-		#except (TypeError, ValidaterException) as e:
-		#	self.conn.rollback()
-			# Unknown studentID or organizationName was encountered
-		#	self._printWarning("%s", e)
-=======
 		except (TypeError, ValidatorException) as e:
 			self.conn.rollback()
 			# Unknown studentID or organizationName was encountered
 			self._printWarning("%s", e)
->>>>>>> master
  
 			#
 			# TODO:
 			#	return message to frontend of error
 			#	return to frontend high priority validation errors
 			# 
-<<<<<<< HEAD
-		#	return e
-=======
 			return e
->>>>>>> master
 
 		except Exception as e:
 			self.conn.rollback()
@@ -134,10 +127,15 @@ class Officer(Student):
 			return True;
 
 		return False
-<<<<<<< HEAD
-=======
 
+	@staticmethod
+	def _printWarning(message, *args):
+		if DEBUG:
+			message = "[WARNING] " + str(message)
+			print message % args
 
-o = Officer()
-print o.leaveOffice('007810023', 'sce')
->>>>>>> master
+	@staticmethod
+	def _printError(message, *args):
+		# Print traceback if debugging ON
+		if DEBUG:
+			print traceback.format_exc()

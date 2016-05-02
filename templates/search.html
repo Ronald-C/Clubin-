@@ -1,0 +1,50 @@
+{% extends "studenttemplate.html" %}
+
+{% block head %}
+	{{ super() }}
+
+{% endblock %}
+
+
+{% block body %}
+	{{ super() }}
+        <center><h2>Club Directory</h2></center>
+        <h4>I am interested in....</h4>
+        <div class="container">
+            <div class="row 100%">
+                 <center>                                
+                <form action="/studenthome">
+                    <table>
+                    <tr>
+                        <td><a href=""> <input type="checkbox" name="" value="">Sports</a></td>
+                        <td><a href=""> <input type="checkbox" name="" value="">Engineering</a></td>
+                        <td><a href=""> <input type="checkbox" name="" value="">Art</a></td>
+                        <td><a href=""> <input type="checkbox" name="" value="">Music</a></td>
+                        <td><a href=""> <input type="checkbox" name="" value="">Anime</a></td>
+                        <td><a href=""> <input type="checkbox" name="" value="">Technology</a></td>
+                        <td><a href=""> <input type="checkbox" name="" value="">Service and Social Justice</a></td>
+                    </tr>
+                    <tr>
+                        <td><a href=""> <input type="checkbox" name="" value="">Math</a></td>
+                        <td><a href=""> <input type="checkbox" name="" value="">Science</a></td>
+                        <td><a href=""> <input type="checkbox" name="" value="">Poetry</a></td>
+                        <td><a href=""> <input type="checkbox" name="" value="">Performing Arts</a></td>
+                        <td><a href=""> <input type="checkbox" name="" value="">Community Service</a></td>
+                        <td><a href=""> <input type="checkbox" name="" value="">Health</a></td>
+                        <td><a href=""> <input type="checkbox" name="" value="">Career Interest</a></td>
+                    </tr>
+                    <tr>
+                        <td><a href=""> <input type="checkbox" name="" value="">Women's Interest</a></td>
+                        <td><a href=""> <input type="checkbox" name="" value="">Cultural</a></td>
+                        <td><a href=""> <input type="checkbox" name="" value="">Food</a></td>
+                        <td><a href=""> <input type="checkbox" name="" value="">Academic</a></td>
+                        <td><a href=""> <input type="checkbox" name="" value="">Faith-Based</a></td>
+                        <td><a href=""> <input type="checkbox" name="" value="">Political</a></td>
+                        <td><a href=""> <input type="checkbox" name="" value="">Honor Societies</a></td>
+                    </tr>
+                    </table>
+                  <input type="submit" class="btn btn-danger" value="Submit">
+                     </form><br>
+            </div>
+        </div>
+     {% endblock %}

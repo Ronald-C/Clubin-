@@ -8,6 +8,8 @@ class ValidatorException(Exception):
 	"""
 
 	def __init__(self, *args):
+		super(ValidatorException, self).__init__()
+
 		errList = []
 		# Build error arguments into list
 		for arg in args:

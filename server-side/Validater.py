@@ -7,18 +7,13 @@ from cerberus import Validator
 from CustomException import ValidatorException
 
 class Validate(Validator):
-#class MyValidator(Validator):
 	""" Validation class using cerberus 
 	
 	Takes json structured inputs to validate, raising errors if any
 	A non-return indicates everything is valid
 	"""
-<<<<<<< HEAD
-	SJSUID = {
-=======
 
 	SCHEMA_RULES = {
->>>>>>> master
 		'SJSUID': {
 			'required': True,
 			'type': 'string',
@@ -52,13 +47,13 @@ class Validate(Validator):
 		'FirstName': {
 			'required': True,
 			'type': 'string',
-			'minlength': 3,
+			'minlength': 2,
 			'maxlength': 45
 		},
 		'LastName': {
 			'required': True,
 			'type': 'string',
-			'minlength': 3,
+			'minlength': 2,
 			'maxlength': 45
 		},
 		'MiddleName': {		# Optional 
@@ -88,7 +83,9 @@ class Validate(Validator):
 		errors = {}		# Any errors as a result of validation
 
 		# Verify email formatting
-		if 'Email' in document:
+		gotEmail = 'Email' in document
+
+		if gotEmail:
 			EMAIL_REGEX = re.compile(r"^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$")
 			
 			if not EMAIL_REGEX.match(document['Email']):
@@ -106,7 +103,7 @@ class Validate(Validator):
 				sys.exit(3)
 
 		# Check if empty rules list before validating
-		if not schema:
+		if not schema and not gotEmail:
 			raise TypeError("Validating against empty schema")
 		else:
 			validStatus = self.v.validate(document, schema)
@@ -114,6 +111,20 @@ class Validate(Validator):
 		# Status contains False if failed to meet rules
 		if not validStatus:
 			errors['ValidatorException'] = self.v.errors
+
+
+		# Verify SJSUID is numeric
+		if 'SJSUID' in document:
+			numericSJSUID = str(document['SJSUID']).isdigit()
+			
+			if not numericSJSUID:
+				if 'ValidatorException' in errors:
+
+					errors['ValidatorException']['SJSUID'] = [
+						errors['ValidatorException']['SJSUID'], 'Not numeric']
+
+				else:
+					errors['ValidatorException'] = {'SJSUID': 'Not numeric'}
 
 		if errors:
 			raise ValidatorException(errors)
