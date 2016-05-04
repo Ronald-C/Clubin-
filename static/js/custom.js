@@ -18,6 +18,10 @@ $(".singleWell").on("click", function() {
     $("#singleModal").modal("show");
 });
 
+$(".orgWell").on("click", function() {
+    $("#orgModal").modal("show");
+});
+
 
 $(".submitSingle").on("click", function() {
 
@@ -38,7 +42,7 @@ $(".submitSingle").on("click", function() {
 }); 
 
 $("#singleModal").on("hidden.bs.modal", function() {
-    $(this).prop("disabled", false).text("Send").addClass("btn-primary").removeClass("btn-success");
+    $(this).find(".submitSingle").prop("disabled", false).text("Send").addClass("btn-primary").removeClass("btn-success");
 });
 
 $("#formLogin").on("submit", function(event) {
