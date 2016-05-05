@@ -4,67 +4,112 @@
 # - http://flask.pocoo.org/docs/0.10/quickstart/#routing
 
 import os
+import sys
+import __builtin__
+import json
 from flask import (
     Flask, abort, flash, redirect, render_template,
-    request, url_for,
-)
-from flask.ext.stormpath import (
-    StormpathError, StormpathManager, User, login_required,
-    login_user, logout_user, user,
+    request, url_for, session
 )
 
-app = Flask('Clubin')
+# Add directory to path to access modules outside of ./
+abspath = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(abspath, 'server-side'))
 
-app.config['DEBUG'] = True
-app.config['SECRET_KEY'] = 'some_really_long_random_string_here'
-app.config['STORMPATH_API_KEY_FILE'] = 'apiKey.properties'
-app.config['STORMPATH_APPLICATION'] = 'flaskr'
+# View modules
+from AccessControl import Registration, Authentication
+from Student import Student
 
-stormpath_manager = StormpathManager(app)
+__builtin__.DEBUG = True                        # Global debug setting
+app = Flask('Clubin')                           # Flask app
+app.config['SECRET_KEY'] = 'super secret key'   # session variable
+
+##########################################################
 
 # Defined landing page
 @app.route('/')
 def index():
     return render_template("index.html")
 
-
+# Render the registration HTML page
 @app.route('/signup')
 def signup():
     return render_template('signup.html')
     
-# @app.route('/')
-# def dashboard():
-#     posts = []
-#     for account in stormpath_manager.application.accounts:
-#         if account.custom_data.get('posts'):
-#             posts.extend(account.custom_data['posts'])
+# Defined organization registration processor
+@app.route('/oRegistration', methods=['GET', 'POST'])
+def organizationRegistration():
+    pass
 
-#     posts = sorted(posts, key=lambda k: k['date'], reverse=True)
-#     return render_template('profile.html', posts=posts)
+Register = Registration()
+# Defined student registration processor 
+@app.route('/sRegistration', methods=['GET', 'POST'])
+def studentRegistration():
+    """
+    The return is of the form: errors = { 'SUCCESS': '', 'ERROR': '' }
+    @Return:
+        - Success = 1 : Indicates successful registration
+        - Success = 0 : There was an error, reference ERROR key
+        - False: 500 system error
 
+    """
+    if request.method == 'GET':
+        return redirect(url_for('signup'))
 
-# @app.route('/add', methods=['POST'])
-# @login_required
-# def add_post():
-#     if not user.custom_data.get('posts'):
-#         user.custom_data['posts'] = []
+    try:
+        _studentID = request.form['SJSUID']
+        _FirstName = request.form['FirstName']
+        _LastName = request.form['LastName']
+        _Password = request.form['Password']
+        _MiddleName = request.form['MiddleName']
+        _studentEmail = request.form['Email']
 
-#     user.custom_data['posts'].append({
-#         'date': datetime.utcnow().isoformat(),
-#         'title': request.form['title'],
-#         'text': request.form['text'],
-#     })
-#     user.save()
+        # Create a student account in database.
+        status = Register._addStudent(studentID=_studentID, studentEmail=_studentEmail, 
+            FirstName=_FirstName, LastName=_LastName, Password=_Password, MiddleName=_MiddleName)
 
-#     flash('New post successfully added.')
-#     return redirect(url_for('dashboard'))
+        if isinstance(status, dict):            
+            return json.dumps(status)
 
-# @app.route('/logout')
-# def logout():
-#     logout_user()
-#     flash('You were logged out.')
-#     return redirect(url_for('dashboard'))
+        else:
+            return redirect('errors/500.html')
 
+    except Exception as err:
+        # Default exception handler
+        return render_template('errors/500.html')         
+
+# Render the user login page
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+Authenticator = Authentication()
+# Defined user login processor
+@app.route('/userLogin', methods=['GET', 'POST'])
+def userLogin():
+    if request.method == 'GET':
+        return redirect(url_for('login'))
+
+    try:
+        _username = request.form['Username']
+        _password = request.form['Password']
+
+        status = Authenticator._authorize(username=_username, password=_password)
+        if isinstance(status, dict):
+            
+            if status['SUCCESS'] == '1':    # OK
+                return render_template('studenthome.html')
+
+            else:           # Errors caught
+                flash(status)               
+                return redirect(url_for('login'))
+        
+        else:       # Something bad happened
+            return render_template('errors/500.html')
+
+    except Exception as e:
+        # Default exception handler
+        return render_template('errors/500.html') 
 
 @app.route('/orgprofile')
 def orgprofile():
@@ -78,14 +123,10 @@ def profile():
 def widgets():
     return render_template('widgets.html')
 
-@app.route('/hometemplate')
-def hometemplate():
-    return render_template('hometemplate.html')
-
-
 @app.route('/studentsignup')
 def studentsignup():
     return render_template('studentsignup.html')
+
 
 @app.route('/studenttemplate')
 def studenttemplate():
