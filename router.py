@@ -83,6 +83,10 @@ def studentRegistration():
 def login():
     return render_template('login.html')
 
+@app.route('/register')
+def register():
+    return render_template('register.html')
+
 Authenticator = Authentication()
 # Defined user login processor
 @app.route('/userLogin', methods=['GET', 'POST'])
@@ -127,7 +131,6 @@ def widgets():
 def studentsignup():
     return render_template('studentsignup.html')
 
-
 @app.route('/studenttemplate')
 def studenttemplate():
     return render_template('studenttemplate.html')
@@ -135,10 +138,6 @@ def studenttemplate():
 @app.route('/studenthome')
 def studenthome():
     return render_template('studenthome.html')
-
-@app.route('/orgsignup')
-def orgsignup():
-    return render_template('orgsignup.html')
 
 @app.route('/search')
 def search():
@@ -152,32 +151,13 @@ def interests():
 def orgsettings():
     return render_template('orgsettings.html')
 
-@app.route('/clubs', methods=['POST'])
+@app.route('/clubs')
 def clubs():
-    fname=request.form['fname']
-    mname=request.form['mname']
-    lname=request.form['lname']
-    sid=request.form['sid']
-    email=request.form['email']
-    password=request.form['password']
-    return render_template('clubs.html', fname=fname, mname=mname, lname=lname, sid=sid, email=email, pasword=password)
+    return render_template('clubs.html')
 
-@app.route('/org')
-def org():
-    return render_template('orghome.html')
-
-@app.route('/orghome', methods=['POST'])
+@app.route('/orghome')
 def orghome():
-    org=request.form['org']
-    aFname=request.form['aFname']
-    aLname=request.form['aLname']
-    aid=request.form['aid']
-    aemail=request.form['aemail']
-    dept=request.form['dept']
-    orgemail=request.form['orgemail']
-    password=request.form['password']
-    return render_template('orghome.html', org=org, aFname=aFname, aLname=aLname, aid=aid, aemail=aemail, dept=dept, orgemail=orgemail, password=password)
-
+    return render_template('orghome.html')
 #
 #@app.route('/buttons')
 #def buttons():
