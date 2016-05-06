@@ -95,7 +95,6 @@ $(".submitSingle").on("click", function() {
                 }
 
             } else { //We were successful
-                console.log("time to move");
                 window.location.href = "/login";
             }
         }

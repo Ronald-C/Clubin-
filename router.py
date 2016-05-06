@@ -80,6 +80,7 @@ def studentRegistration():
 
     except Exception as err:
         # Default exception handler
+        print("werds")
         return render_template('errors/500.html')         
 
 # Render the user login page
