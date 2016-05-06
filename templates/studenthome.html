@@ -1,63 +1,66 @@
-{% extends "studenttemplate.html" %}
+{% extends "studenttemplate.html" %} 
 
-{% block head %}
-	{{ super() }}
+{% block head %} 
+    {{ super() }} 
+{% endblock %} 
 
+{% block body %} {{ super() }}
+
+<h2>My Stats</h2>
+<!-- Small boxes (Stat box) -->
+<div class="row">
+    <div class="col-lg-3 col-xs-6">
+        <!-- small box -->
+        <div class="small-box bg-aqua">
+            <div class="inner">
+                <h3>4</h3>
+                <p>Organizations Joined</p>
+            </div>
+            <div class="icon">
+                <i class="fa fa-graduation-cap"></i>
+            </div>
+        </div>
+    </div>
+    <!-- ./col -->
+    <div class="col-lg-3 col-xs-6">
+        <!-- small box -->
+        <div class="small-box bg-green">
+            <div class="inner">
+                <h3>7</h3>
+                <p>Interests Declared</p>
+            </div>
+            <div class="icon">
+                <i class="fa fa-thumbs-up"></i>
+            </div>
+        </div>
+    </div>
+    <!-- ./col -->
+    <div class="col-lg-3 col-xs-6">
+        <!-- small box -->
+        <div class="small-box bg-yellow">
+            <div class="inner">
+                <h3>44</h3>
+                <p>Comments Made</p>
+            </div>
+            <div class="icon">
+                <i class="fa fa-comment"></i>
+            </div>
+        </div>
+    </div>
+    <!-- ./col -->
+    <div class="col-lg-3 col-xs-6">
+        <!-- small box -->
+        <div class="small-box bg-red">
+            <div class="inner">
+                <h3>65</h3>
+                <p>Organizations Banned From</p>
+            </div>
+            <div class="icon">
+                <i class="fa fa-times"></i>
+            </div>
+        </div>
+    </div>
+    <!-- ./col -->
+</div>
+<!-- /.row -->
 {% endblock %}
-
-
-{% block body %}
-	{{ super() }}
-        <h2>My Stats</h2>
-          <!-- Small boxes (Stat box) -->
-          <div class="row">
-            <div class="col-lg-3 col-xs-6">
-              <!-- small box -->
-              <div class="small-box bg-aqua">
-                <div class="inner">
-                  <h3>4</h3>
-                  <p>Organizations Joined</p>
-                </div>
-                <div class="icon">
-                  <i class="fa fa-graduation-cap"></i>
-                </div>
-              </div>
-            </div><!-- ./col -->
-            <div class="col-lg-3 col-xs-6">
-              <!-- small box -->
-              <div class="small-box bg-green">
-                <div class="inner">
-                  <h3>7</h3>
-                  <p>Interests Declared</p>
-                </div>
-                <div class="icon">
-                  <i class="fa fa-thumbs-up"></i>
-                </div>
-              </div>
-            </div><!-- ./col -->
-            <div class="col-lg-3 col-xs-6">
-              <!-- small box -->
-              <div class="small-box bg-yellow">
-                <div class="inner">
-                  <h3>44</h3>
-                  <p>Comments Made</p>
-                </div>
-                <div class="icon">
-                  <i class="fa fa-comment"></i>
-                </div>
-              </div>
-            </div><!-- ./col -->
-            <div class="col-lg-3 col-xs-6">
-              <!-- small box -->
-              <div class="small-box bg-red">
-                <div class="inner">
-                  <h3>65</h3>
-                  <p>Organizations Banned From</p>
-                </div>
-                <div class="icon">
-                  <i class="fa fa-times"></i>
-                </div>
-              </div>
-            </div><!-- ./col -->
-          </div><!-- /.row -->
-     {% endblock %}
