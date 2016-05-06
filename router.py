@@ -11,19 +11,23 @@ from flask import (
     Flask, abort, flash, redirect, render_template,
     request, url_for, session
 )
-from functools import wraps
 
 # Add directory to path to access modules outside of ./
 abspath = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(abspath, 'server-side'))
 
 # View modules
+from Helpers import login_required
 from AccessControl import Registration, Authentication
 from Student import Student
 
 __builtin__.DEBUG = True                        # Global debug setting
 app = Flask('Clubin')                           # Flask app
 app.config['SECRET_KEY'] = 'super secret key'   # session variable
+
+Authenticator = Authentication()
+Register = Registration()
+student = Student()
 
 ##########################################################
 
@@ -42,7 +46,6 @@ def signup():
 def organizationRegistration():
     pass
 
-Register = Registration()
 # Defined student registration processor 
 @app.route('/sRegistration', methods=['GET', 'POST'])
 def studentRegistration():
@@ -84,7 +87,6 @@ def studentRegistration():
 def login():
     return render_template('login.html')
 
-Authenticator = Authentication()
 # Defined user login processor
 @app.route('/userLogin', methods=['GET', 'POST'])
 def userLogin():
@@ -98,8 +100,20 @@ def userLogin():
         if isinstance(status, dict):
 
             if status['SUCCESS'] == '1':    # OK
-                session['logged_in'] = True
-                return render_template('studenthome.html')
+                studentInfo = student.getStudentInfo(_username)
+
+                if studentInfo == False:        # Fetch student info session
+                    status['SUCCESS'] = '0'
+                    status['ERROR'] = "Failed to find student info"
+
+                    flash(status)       
+                    return redirect(url_for('login'))
+                
+                else:   # Successful fetch of student info
+                    session['logged_in'] = True
+                    session['Info'] = dict(studentInfo)
+
+                return redirect(url_for('studenthome'))
 
             else:           # Errors caught
                 flash(status)               
@@ -109,9 +123,13 @@ def userLogin():
             return render_template('errors/500.html')
 
     except Exception as e:
-        print(e)
         # Default exception handler
         return render_template('errors/500.html') 
+
+@app.route('/studenthome')
+@login_required
+def studenthome():
+    return render_template('studenthome.html')
 
 @app.route('/orgprofile')
 def orgprofile():
@@ -125,22 +143,7 @@ def profile():
 def widgets():
     return render_template('widgets.html')
 
-@app.route('/studentsignup')
-def studentsignup():
-    return render_template('studentsignup.html')
 
-
-@app.route('/studenttemplate')
-def studenttemplate():
-    return render_template('studenttemplate.html')
-
-@app.route('/studenthome')
-def studenthome():
-    return render_template('studenthome.html')
-
-@app.route('/orgsignup')
-def orgsignup():
-    return render_template('orgsignup.html')
 
 @app.route('/search')
 def search():
@@ -180,26 +183,13 @@ def orghome():
     password=request.form['password']
     return render_template('orghome.html', org=org, aFname=aFname, aLname=aLname, aid=aid, aemail=aemail, dept=dept, orgemail=orgemail, password=password)
 
-########### HELPER FUNCTIONS ###########
 
-def login_required(f):
-    @wraps(f)
-    def wrap(*args, **kwargs):
-        if 'logged_in' in session:
-            return f(*args, **kwargs)
-        else:
-            flash("You need to login first")
-            return redirect(url_for('login_page'))
-
-    return wrap
-
-@app.route("/logout/")
+@app.route("/logout")
 @login_required
 def logout():
     session.clear()
     flash("You have been logged out!")
-    gc.collect()
-    return redirect(url_for('dashboard'))
+    return redirect(url_for('index'))
         
 
 # Default catch all routes; 401 status

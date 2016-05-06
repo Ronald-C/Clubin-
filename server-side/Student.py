@@ -22,6 +22,51 @@ class Student(Database):
 		self.conn = super(Student, self).connect()
 		self.session = super(Student, self).getSession()
 
+	def getStudentInfo(self, username):
+		username = str(username)
+
+		# Is username SJSUID or email ???
+		isSJSUID = username.replace(' ', '').isdigit()
+
+		studentInfo = {}
+		try:
+			# Check if the user is present
+			if isSJSUID:
+				self.session.execute("""
+					SELECT * FROM Student WHERE Student.`SJSUID` = %s;
+					""", username)
+
+			else:	# username is an email
+				self.session.execute("""
+					SELECT * FROM Student WHERE Student.`Email` = %s;
+					""", username)
+			
+			details = self.session.fetchone()
+			if details:		# Get Student table
+				studentInfo['Student'] = details
+				uid = details['UID']
+			
+			else:	# If nothing returned == student not found
+				return False
+
+			# Get organization student is member of
+			self.session.execute("""
+				SELECT org.OrganizationID, org.OrganizationName FROM MemberOf as memOf 
+					JOIN Organization as org WHERE memOf.`Organization_fk` = org.`OrganizationID`
+					AND memOf.`Active` = '1' AND memOf.`Student_fk` = %s;
+				""", uid)
+
+			studentInfo['Organizations'] = self.session.fetchone()
+
+			if studentInfo:		# Non-empty dict
+				return studentInfo
+
+			else:
+				return False
+
+		except Exception as e:
+			return False
+
 	def joinOrganization(self, studentID, organizationName):
 		try:
 			# Validate method arguments
@@ -439,6 +484,15 @@ class Student(Database):
 			SET Student.`Email` = %s
 				WHERE Student.`SJSUID` = %s;
 			""", (newStudentEmail, studentID))
+
+	def getInterests(self):
+		self.session.execute("""
+			SELECT Interest.`InterestID`, Interest.`Title` FROM StudentInterest
+				JOIN Interest ON StudentInterest.`Interest_fk` = Interest.`InterestID`
+				WHERE StudentInterest.`Student_fk` = %s
+			""", uid)
+		
+		return self.session.fetchone()		
 
 	@staticmethod
 	def _printWarning(message, *args):
