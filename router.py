@@ -94,7 +94,6 @@ def userLogin():
     try:
         _username = request.form['Username']
         _password = request.form['Password']
-
         status = Authenticator._authorize(username=_username, password=_password)
         if isinstance(status, dict):
 
@@ -110,6 +109,7 @@ def userLogin():
             return render_template('errors/500.html')
 
     except Exception as e:
+        print(e)
         # Default exception handler
         return render_template('errors/500.html') 
 

@@ -32,7 +32,26 @@ $(".submitSingle").on("click", function() {
         data: $('#singleForm').serialize(),
         type: 'POST',
         success: function(response) {
-            console.log(response)
+            var jinjaObject = $.parseJSON(response);
+            // console.log("Direct response is before parse: " + response);
+            // console.log("Am I successful?: " + jinjaObject["SUCCESS"] );
+            // console.log("Object after parsing is... ");
+            // console.log(jinjaObject);
+
+            //If not successful
+            if(jinjaObject["SUCCESS"] != "1") {
+                $(".submitSingle").prop("disabled", false).text("Send").addClass("btn-primary").removeClass("btn-success");
+
+                //Loop through error object, toast the words.
+                var errObj = $.parseJSON( jinjaObject["ERROR"] );
+                for(var key in errObj) {
+                    toastr["warning"](errObj[key], key);
+                }
+
+            } else { //We were successful
+                console.log("time to move");
+                window.location.href = "/login";
+            }
         }
     })
 }); 
