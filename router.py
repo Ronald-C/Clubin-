@@ -11,6 +11,7 @@ from flask import (
     Flask, abort, flash, redirect, render_template,
     request, url_for, session
 )
+from datetime import timedelta
 
 # Add directory to path to access modules outside of ./
 abspath = os.path.dirname(os.path.abspath(__file__))
@@ -23,7 +24,8 @@ from Student import Student
 
 __builtin__.DEBUG = True                        # Global debug setting
 app = Flask('Clubin')                           # Flask app
-app.config['SECRET_KEY'] = 'super secret key'   # session variable
+app.secret_key = os.urandom(24)                 # session variable
+app.permanent_session_lifetime = timedelta(hours=12)
 
 Authenticator = Authentication()
 Register = Registration()
