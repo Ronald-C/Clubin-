@@ -58,110 +58,113 @@
     <!-- /.content -->
 
     <!-- Modal Zone -->
+        <!-- Single Person Modal -->
+        <div class="modal fade" id="singleModal" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Hello there, New Person</h4>
+                    </div>
+                    <div class="modal-body">
 
+                        <div class="row">
 
-    <!-- Single Person Modal -->
-    <div class="modal fade" id="singleModal" role="dialog">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Hello there, New Person</h4>
-                </div>
-                <div class="modal-body">
+                            <div class="col-lg-offset-2 col-lg-8">
 
-                    <div class="row">
+                                <form id="singleForm" class="form-horizontal" role="form" autocomplete="off">
 
-                        <div class="col-lg-offset-2 col-lg-8">
-
-                            <form id="singleForm" class="form-horizontal" role="form" autocomplete="off">
-
-                                <div class="form-group">
-                                    <label class="control-label col-lg-2" for="FirstNameSingle">First Name</label>
-                                    <div class="col-lg-10">
-                                      <input id="FirstNameSingle" class="form-control" type="text" name="FirstName"></input>
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-2" for="FirstNameSingle">First Name</label>
+                                        <div class="col-lg-10">
+                                            <input id="FirstNameSingle" class=" mandatory form-control" type="text" name="FirstName"></input>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="form-group">
-                                    <label class="control-label col-lg-2" for="MiddleNameSingle">Middle Name</label>
-                                    <div class="col-lg-10">
-                                                                            <input id="MiddleNameSingle" class="form-control" type="text" name="MiddleName"></input>
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-2" for="MiddleNameSingle">M. Name</label>
+                                        <div class="col-lg-10">
+                                            <input id="MiddleNameSingle" class="form-control" type="text" name="MiddleName"></input>
 
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="form-group">
-                                    <label class="control-label col-lg-2" for="LastNameSingle">Last Name</label>
-                                    <div class="col-lg-10">
-                                                                            <input id="LastNameSingle" class="form-control" type="text" name="LastName"></input>
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-2" for="LastNameSingle">Last Name</label>
+                                        <div class="col-lg-10">
+                                            <input id="LastNameSingle" class="mandatory form-control" type="text" name="LastName"></input>
 
 
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="form-group">
-                                    <label class="control-label col-lg-2" for="SJSUIDSingle">SJSUID</label>
-                                    <div class="col-lg-10">
-                                        
-                                                                            <input id="SJSUIDSingle" class="form-control" type="text" name="SJSUID"></input>
+                                    <div class="form-group">
+                                        <label type="number" patter=".{9,9}" class="control-label col-lg-2" for="SJSUIDSingle">SJSUID</label>
+                                        <div class="col-lg-10">
 
+                                            <input id="SJSUIDSingle" class="mandatory form-control" type="text" name="SJSUID"></input>
+
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="form-group">
-                                    <label class="control-label col-lg-2" for="emailSingle">E-mail</label>
-                                    <div class="col-lg-10">
-                                                                            <input id="emailSingle" class="form-control" type="email" name="Email"></input>
-
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-2" for="emailSingle">E-mail</label>
+                                        <div class="col-lg-10">
+                                            <input id="emailSingle" class="mandatory form-control" type="email" name="Email"></input>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="form-group">
-                                    <label class="control-label col-lg-2" for="PasswordSingle">Password</label>
-                                    <div class="col-lg-10">
-                                                                            <input id="PasswordSingle" class="form-control" type="password" name="Password"></input>
+                                    <br /><br />
 
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-2" for="PasswordSingle">Password</label>
+                                        <div class="col-lg-10">
+                                            <input id="PasswordSingle" class="mandatory form-control" type="password" name="Password"></input>
+
+                                        </div>
                                     </div>
-                                </div>
-                            </form>
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-2" for="PasswordSingleAgain">Confirm</label>
+                                        <div class="col-lg-10">
+                                            <input id="PasswordSingleAgain" class="mandatory form-control" type="password" name="Password2"></input>
+
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary submitSingle">Submit</button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary submitSingle">Submit</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-</div>
+        </div>
+        </div>
 
-<!-- Organization Modal -->
-<div id="orgModal" class="modal fade" role="dialog">
-  <div class="modal-dialog modal-lg">
+        <!-- Organization Modal -->
+        <div id="orgModal" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-lg">
 
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header text-center">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h2 class="modal-title">Here Lies an Organization Registration</h2>
-      </div>
-      <div class="modal-body text-center">
-        <h3>R.I.P.</h3>
-        <h3>We barely knew ye.</h3>
-        <img src="../static/images/getIn.gif">
-      </div>
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header text-center">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h2 class="modal-title">Here Lies an Organization Registration</h2>
+                    </div>
+                    <div class="modal-body text-center">
+                        <h3>R.I.P.</h3>
+                        <h3>We barely knew ye.</h3>
+                        <img src="../static/images/getIn.gif">
+                    </div>
 
-    </div>
+                </div>
 
-  </div>
-</div>
-<!-- End Organization Modal -->
-
-
-
-<!-- End Modal Zone -->
+            </div>
+        </div>
+        <!-- End Organization Modal -->
+    <!-- End Modal Zone -->
 </div>
 <!-- /.content-wrapper -->
 
