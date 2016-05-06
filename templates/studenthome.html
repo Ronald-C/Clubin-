@@ -7,6 +7,15 @@
 {% block body %} {{ super() }}
 
 <h2>My Stats</h2>
+                                {% if session.logged_in %}
+                                    <span class="hidden-xs">
+                                        {{ session }}
+                                        {{ session.Info.Student.LastName }}
+                                    </span>
+                                {% else %}
+                                    <span class="hidden-xs">Your Name Here</span>
+                                {% endif %}
+
 
 <!-- Small boxes (Stat box) -->
 <div class="row">
