@@ -56,7 +56,10 @@ class Student(Database):
 					AND memOf.`Active` = '1' AND memOf.`Student_fk` = %s;
 				""", uid)
 
-			studentInfo['Organizations'] = self.session.fetchone()
+			studentInfo['Organizations'] = self.session.fetchall()
+
+
+			studentInfo['Interests'] = self.getInterests(username)
 
 			if studentInfo:		# Non-empty dict
 				return studentInfo
@@ -485,14 +488,19 @@ class Student(Database):
 				WHERE Student.`SJSUID` = %s;
 			""", (newStudentEmail, studentID))
 
-	def getInterests(self):
+	def getInterests(self, uid):
 		self.session.execute("""
 			SELECT Interest.`InterestID`, Interest.`Title` FROM StudentInterest
 				JOIN Interest ON StudentInterest.`Interest_fk` = Interest.`InterestID`
 				WHERE StudentInterest.`Student_fk` = %s
 			""", uid)
-		
-		return self.session.fetchone()		
+
+		manyThings = self.session.fetchall()
+		if manyThings:
+			return manyThings
+		else:
+			return ''		
+		# return self.session.fetchall()		
 
 	@staticmethod
 	def _printWarning(message, *args):

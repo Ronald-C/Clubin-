@@ -135,10 +135,15 @@
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="{{ url_for('studentBulletins') }}"><i class="fa fa-circle-o"></i>SCE</a></li>
-                            <li><a href="{{ url_for('studentBulletins') }}"><i class="fa fa-circle-o"></i>Pokemon Club</a></li>
-                            <li><a href="{{ url_for('studentBulletins') }}"><i class="fa fa-circle-o"></i>IEEE</a></li>
-                            <li><a href="{{ url_for('studentBulletins') }}"><i class="fa fa-circle-o"></i>Juggling Club</a></li>
+                            {% if session.logged_in %}
+                              {% for index in session.Info.Organizations  %}
+                                <li orgValue="{{index['OrganizationID']}}" >
+                                  <a href="{{ url_for('studentBulletins') }}">
+                                    <i class="fa fa-circle-o"></i>{{index['OrganizationName']}}
+                                  </a>
+                                </li>
+                              {%endfor%}
+                            {% endif %}
                         </ul>
                     </li>
                     <!-- /that student comment-->
