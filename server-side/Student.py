@@ -58,11 +58,17 @@ class Student(Database):
 
 			studentInfo['Organizations'] = self.session.fetchall()
 
+			#All the student's interests
+			studentInfo['Interests'] = self.getInterests(uid)
 
-			studentInfo['Interests'] = self.getInterests(username)
+			#All the student's comments (count, not the words)
+			studentInfo['CommentCount'] = self.getCommentCount(uid)
+
+			#All the student's banned orgs (count, not the names)
+			studentInfo['BanCount'] = self.getBanCount(uid)
 
 			if studentInfo:		# Non-empty dict
-				return studentInfo
+				return studentInfo	
 
 			else:
 				return False
@@ -496,11 +502,34 @@ class Student(Database):
 			""", uid)
 
 		manyThings = self.session.fetchall()
+
 		if manyThings:
 			return manyThings
 		else:
 			return ''		
-		# return self.session.fetchall()		
+	
+	def getCommentCount(self, uid):
+		self.session.execute("""
+		SELECT
+			COUNT(Author_fk) AS count
+		FROM
+			Comment
+		WHERE
+			Author_fk = %s""", uid)
+
+		return self.session.fetchone()
+
+
+	def getBanCount(self, uid):
+		self.session.execute("""
+		SELECT
+			COUNT(Student_fk) AS count
+		FROM
+			TroubleMaker
+		WHERE
+			Student_fk = %s""", uid)
+
+		return self.session.fetchone()
 
 	@staticmethod
 	def _printWarning(message, *args):
