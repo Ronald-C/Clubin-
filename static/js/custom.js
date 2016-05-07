@@ -95,7 +95,6 @@ $(".submitSingle").on("click", function() {
                 }
 
             } else { //We were successful
-                console.log("time to move");
                 window.location.href = "/login";
             }
         }
@@ -117,7 +116,13 @@ $("#formLogin").on("submit", function(event) {
     //         console.log(response)
     //     }
     // })
-
 })
+
+//quick access to the entire session variable
+$(document).keyup(function (e) {
+if (e.keyCode == 37) {
+    $("#sessionModal").modal("toggle");
+}
+});
 
 

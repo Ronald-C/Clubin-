@@ -82,6 +82,7 @@ def studentRegistration():
 
     except Exception as err:
         # Default exception handler
+        print("werds")
         return render_template('errors/500.html')         
 
 # Render the user login page
@@ -132,6 +133,12 @@ def userLogin():
 @login_required
 def studenthome():
     return render_template('studenthome.html')
+
+@app.route('/studentBulletins')
+def studentBulletins():
+    return render_template('studentBulletins.html')
+
+
 
 @app.route('/orgprofile')
 def orgprofile():
