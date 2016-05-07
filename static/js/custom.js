@@ -116,7 +116,13 @@ $("#formLogin").on("submit", function(event) {
     //         console.log(response)
     //     }
     // })
-
 })
+
+//quick access to the entire session variable
+$(document).keyup(function (e) {
+if (e.keyCode == 37) {
+    $("#sessionModal").modal("toggle");
+}
+});
 
 

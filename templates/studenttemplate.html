@@ -70,13 +70,18 @@
                                 <!-- User image -->
                                 <li class="user-header">
                                     <img src="static/dist/img/spartan.jpg" class="img-circle" alt="User Image">
-                                    <p>Student Name</p>
+                                    <p>
+                                        {{ session.Info.Student.FirstName }}
+                                        {{ session.Info.Student.LastName }}
+                                    </p>
                                 </li>
                                 <!-- Menu Footer-->
                                 <li class="user-footer">
-                                    <div class="pull-right">
-                                        <a href="#" class="btn btn-default btn-flat">Sign out</a>
-                                    </div>
+                                    <div class="pull-right">`
+                                      {% if session.logged_in %}
+                                        <a href="{{ url_for('login')}}" class="btn btn-default btn-flat">Sign out</a>
+                                      {%endif%}
+                                    </div>`
                                 </li>
                             </ul>
                         </li>
@@ -213,6 +218,31 @@
     <script src="static/dist/js/pages/dashboard.js"></script>
     <!-- AdminLTE for demo purposes -->
     <script src="static/dist/js/demo.js"></script>
+
+    <!-- custom -->
+    <script type="text/javascript" src="static/js/custom.js"></script>
+
+    <!-- Begin Modal Zone -->
+      <!-- Session Modal. Press left-arrow key to see the modal. -->
+      <div id="sessionModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header text-center">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">All the session stuff is below</h4>
+            </div>
+            <div class="modal-body">
+              <p>{{session}}</p>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    <!-- End Modal Zone -->
+
 </body>
 
 </html>
