@@ -132,6 +132,12 @@ def userLogin():
 def studenthome():
     return render_template('studenthome.html')
 
+@app.route('/studentBulletins')
+def studentBulletins():
+    return render_template('studentBulletins.html')
+
+
+
 @app.route('/orgprofile')
 def orgprofile():
     return render_template('orgprofile.html')
