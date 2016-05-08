@@ -83,16 +83,19 @@ $(".submitSingle").on("click", function() {
         data: $('#singleForm').serialize(),
         type: 'POST',
         success: function(response) {
+            console.log(response);
             var jinjaObject = $.parseJSON(response);
+            console.log(jinjaObject);
+            console.log(typeof jinjaObject);
+
             //If not successful
             if(jinjaObject["SUCCESS"] != "1") {
                 $(".submitSingle").prop("disabled", false).text("Send").addClass("btn-primary").removeClass("btn-success");
 
                 //Loop through error object, toast the words.
-                var errObj = $.parseJSON( jinjaObject["ERROR"] );
-                for(var key in errObj) {
-                    toastr["warning"](errObj[key], key);
-                }
+                toastr.clear();
+                toastr["warning"](jinjaObject["ERROR"]);
+                return;
 
             } else { //We were successful
                 window.location.href = "/login";
@@ -125,4 +128,10 @@ if (e.keyCode == 37) {
 }
 });
 
+//quick access to the entire bulletin variable
+$(document).keyup(function (e) {
+if (e.keyCode == 39) {
+    $("#bulletinModal").modal("toggle");
+}
+});
 
