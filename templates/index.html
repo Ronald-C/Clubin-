@@ -14,6 +14,15 @@
             <section class="content-header">
                 <p style="font-size:100px">Clubin' </p>
             </section>
+            <div id="flashZone">
+                {% with messages = get_flashed_messages(with_categories=False) %} {% if messages %}
+                <ul class=flashes>
+                    {% for message in messages %}
+                    <li> {{ message }} </li>
+                    {% endfor %}
+                </ul>
+                {% endif %} {% endwith %}
+            </div>
         </center>
         <!-- Main content -->
         <section class="content">
