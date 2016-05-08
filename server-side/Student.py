@@ -100,15 +100,16 @@ class Student(Database):
 			self.session.execute("""
 				SELECT n.ArticleID, n.ArticleTitle, n.ArticleContent, n.`Timestamp`,
 					c.Content, c.`Timestamp` FROM NewsfeedArticle as n
-					JOIN Comment as c WHERE n.ArticleID = c.Article_fk
-						AND n.OrganizationID = %s AND c.Author_fk = %s;
-				""", (org['OrganizationID'], student_uid))
+					LEFT JOIN Comment as c on n.ArticleID = c.Article_fk
+						WHERE n.OrganizationID = %s;
+				""", (org['OrganizationID']))
 
 			orgInfo['Details'] = self.session.fetchall()
 
 			return orgInfo
 
 		except Exception as e:
+			print("e is " + e)
 			self._printWarning("%s", e)
 			return False
 
