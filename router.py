@@ -155,12 +155,6 @@ def orgprofile():
 def profile():
     return render_template('profile.html')
 
-@app.route('/widgets')
-def widgets():
-    return render_template('widgets.html')
-
-
-
 @app.route('/search')
 def search():
     return render_template('search.html')
@@ -208,13 +202,12 @@ def logout():
     return redirect(url_for('index'))
         
 
-# Default catch all routes; 401 status
+# Default catch all routes
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def catch_all(path):
-    return 'You want path: %s' % path
+    return redirect(url_for('studenthome'))
 
-        
 
 if __name__ == '__main__':
     DEFAULT_HOST = '127.0.0.1'      # Set env to config host/port
