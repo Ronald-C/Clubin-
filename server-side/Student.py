@@ -74,6 +74,42 @@ class Student(Database):
 				return False
 
 		except Exception as e:
+			self._printWarning("%s", e)
+			return False
+
+	def getOrganizationInfo(self, organization_id, student_SJSUID):
+		orgInfo = {'Info': '', 'Details': ''}
+
+		try:
+			self.session.execute("""
+				SELECT * FROM
+					Organization WHERE Organization.OrganizationID = %s;
+				""", organization_id)
+
+			org =  self.session.fetchone()
+
+			if len(org) > 0:		# If organization exists
+				orgInfo['Info'] = org
+
+			else:
+				return False
+
+			# Get Articles & Comments
+			student_uid = self._getStudentUID(student_SJSUID)
+
+			self.session.execute("""
+				SELECT n.ArticleID, n.ArticleTitle, n.ArticleContent, n.`Timestamp`,
+					c.Content, c.`Timestamp` FROM NewsfeedArticle as n
+					JOIN Comment as c WHERE n.ArticleID = c.Article_fk
+						AND n.OrganizationID = %s AND c.Author_fk = %s;
+				""", (org['OrganizationID'], student_uid))
+
+			orgInfo['Details'] = self.session.fetchall()
+
+			return orgInfo
+
+		except Exception as e:
+			self._printWarning("%s", e)
 			return False
 
 	def joinOrganization(self, studentID, organizationName):

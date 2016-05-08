@@ -82,7 +82,6 @@ def studentRegistration():
 
     except Exception as err:
         # Default exception handler
-        print("werds")
         return render_template('errors/500.html')         
 
 # Render the user login page
@@ -134,11 +133,19 @@ def userLogin():
 def studenthome():
     return render_template('studenthome.html')
 
-@app.route('/studentBulletins')
-def studentBulletins():
-    return render_template('studentBulletins.html')
+@app.route('/studentBulletins/<organization_id>')
+@login_required
+def studentBulletins(organization_id):
+    a =  student.getOrganizationInfo(organization_id, session['Info']['Student']['SJSUID'])
+    if a == False:
+        render_template('errors/500.html')
+
+    return render_template('studentBulletins.html', organizationData=a)
 
 
+
+
+    
 
 @app.route('/orgprofile')
 def orgprofile():
@@ -219,5 +226,5 @@ if __name__ == '__main__':
     if 'HOST' in os.environ:
         DEFAULT_HOST = str(os.environ['HOST'])
 
-    app.run(host=DEFAULT_HOST, port=DEFAULT_PORT)
+    app.run(host=DEFAULT_HOST, port=DEFAULT_PORT, debug=DEBUG)
 
