@@ -86,15 +86,11 @@ $(".submitSingle").on("click", function() {
             console.log(response);
             var jinjaObject = $.parseJSON(response);
             console.log(jinjaObject);
-            console.log(typeof jinjaObject);
 
             //If not successful
             if(jinjaObject["SUCCESS"] != "1") {
                 $(".submitSingle").prop("disabled", false).text("Send").addClass("btn-primary").removeClass("btn-success");
-
-                //Loop through error object, toast the words.
-                toastr.clear();
-                toastr["warning"](jinjaObject["ERROR"]);
+                toastr["warning"]("Please check your inputs.");
                 return;
 
             } else { //We were successful
