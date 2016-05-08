@@ -89,6 +89,8 @@ def studentRegistration():
 def login():
     return render_template('login.html')
 
+####################### STUDENT VIEW #######################
+
 # Defined user login processor
 @app.route('/userLogin', methods=['GET', 'POST'])
 def userLogin():
@@ -142,26 +144,28 @@ def studentBulletins(organization_id):
 
     return render_template('studentBulletins.html', organizationData=a)
 
-
-
-
-    
-
-@app.route('/orgprofile')
-def orgprofile():
-    return render_template('orgprofile.html')
+@app.route('/interests')
+@login_required
+def interests():
+    ints = student.getAllInterests()
+    return render_template('interests.html', interest=ints)
 
 @app.route('/profile')
+@login_required
 def profile():
     return render_template('profile.html')
 
 @app.route('/search')
+@login_required
 def search():
     return render_template('search.html')
 
-@app.route('/interests')
-def interests():
-    return render_template('interests.html')
+
+####################### ORGANIZATION VIEW #######################
+
+@app.route('/orgprofile')
+def orgprofile():
+    return render_template('orgprofile.html')
 
 @app.route('/orgsettings')
 def orgsettings():

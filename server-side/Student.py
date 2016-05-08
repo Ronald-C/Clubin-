@@ -545,6 +545,23 @@ class Student(Database):
 		else:
 			return ''		
 	
+	def getAllInterests(self):
+		try:
+			self.session.execute("""
+				SELECT * FROM Interest;
+			""")
+
+			it = self.session.fetchall()
+			if len(it) > 0:
+				return it
+
+			else:
+				return False
+
+		except Exception as e:
+			return False
+
+
 	def getCommentCount(self, uid):
 		self.session.execute("""
 		SELECT
