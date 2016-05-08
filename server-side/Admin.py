@@ -29,3 +29,17 @@ class Admin(Officer): # Admin class declaration
 					WHERE Organization.`OrganizationID` = %s
 					""", (orgID,orgName,Descrip,Building,RoomNumber)) # updates Name,Description,Building, RoomNumber based on the orgID number
 		self.conn.commit()
+
+	def isAdmin(self,AdminR):
+
+		self.session.execute("""SELECT AdminRank
+								From OfficerOf
+								Where Student_fk = %s """ % AdminR)
+		self.conn.commit()
+		AdminR = self.session.fetchone() # note : fetchone() grabs the next row of a query
+		if not AdminR:
+			raise TypeError("Student is not an Admin")
+
+		else:
+			AdminR = AdminR['AdminRank']
+			return str(AdminR)
