@@ -9,14 +9,15 @@
 
 <!-- Small boxes (Stat box) -->
 <div class="row">
+<!-- hidden stuff -->
+<input id="hiddenOrg" type="hidden" value="{{organizationData.Info.OrganizationID }}"></input>
     <!-- Main content -->
     <section class="content ">
         <!-- Main row -->
         <div class="row">
             <!-- Left col -->
             <section class="col-lg-7 connectedSortable mainLeft">
-                <h2>Club Name</h2>
-                {{ organizationData }}
+                <h2>{{ organizationData.Info.OrganizationName }} - <small>{{ organizationData.Info.Description }}</small>  </h2>
                 <img class="orgSplash" src="{{ url_for('static', filename='dist/img/tower-hall.jpg') }}">
                 <div class="box-body">
                 </div>
@@ -26,11 +27,16 @@
             <!-- right col (We are only adding the ID to make the widgets sortable)-->
             <section class="col-lg-5 connectedSortable">
                 <h2>Bulletins</h2>
-                <!-- Chat box -->
+
+
+<!-- justin attempts to make dynamic bulletins-->
+ {% for key in organizationData.Details %}
                 <div class="box box-success">
                     <div class="box-header">
                         <i class="fa fa-comments-o"></i>
-                        <h3 class="box-title">Important Werds</h3>
+                        <h3 class="box-title"> {{key.ArticleTitle }}
+
+                        </h3>                    
                     </div>
                     <div class="box-body chat" id="chat-box">
                         <!-- chat item -->
@@ -38,9 +44,9 @@
                             <img src="{{ url_for('static', filename='dist/img/spartan.jpg') }}" alt="user image" class="online">
                             <p class="message">
                                 <a href="#" class="name">
-                                    <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> 2:15</small> Winston Churchill
+                                    <small class="text-muted pull-right"></small>{{ organizationData.Info.OrganizationName }} says...
                                 </a>
-                                We shall fight on beaches, we shall fight on the landing grounds, we shall fight in fields and in the streets, we shall fight in the hills. We shall never surrender and if, which I do not for the moment believe, this island or a large part of it were subjugated and starving, then our empire beyond the seas, armed and guarded by the British Fleet, will carry on the struggle until in God's good time the New World with all its power and might, steps forth to the rescue and liberation of the Old.
+                                {{key.ArticleContent}}
                             </p>
                         </div>
                         <!-- /.item -->
@@ -48,14 +54,19 @@
                     <!-- /.chat -->
                     <div class="box-footer">
                         <div class="input-group">
-                            <input class="form-control" placeholder="Add your comment...">
+                            <input value="" class="form-control" placeholder="Add your comment...">
                             <div class="input-group-btn">
-                                <button class="btn btn-success"><i class="fa fa-plus"></i></button>
+                                <button person="{{session.Info.Student.UID}}" artID="{{key.ArticleID}}" class="btn btn-success addComment"><i class="fa fa-plus"></i></button>
                             </div>
                         </div>
                     </div>
                 </div>
                 <!-- /.box (chat box) -->
+{% endfor %}
+
+
+<!-- end justin -->
+
             </section>
             <!-- right col -->
         </div>
@@ -64,4 +75,23 @@
     <!-- /.content -->
 </div>
 <!-- /.row -->
+
+    <!-- Begin Modal Zone -->
+    <!-- Session Modal. Press left-arrow key to see the modal. -->
+    <div id="bulletinModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">oraganizationData!</h4>
+                </div>
+                <div class="modal-body">
+                    <p>{{organizationData}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Modal Zone -->
+
 {% endblock %}

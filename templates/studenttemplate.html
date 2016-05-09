@@ -170,7 +170,7 @@
         </div>
         <!-- /.content-wrapper -->
         <footer class="main-footer">
-            <div class="container text-center">
+            <div class="container">
                 <strong>Copyright &copy; 2016 Clubin'.</strong> All rights reserved.
             </div>
             <!-- /.container -->
@@ -183,7 +183,7 @@
     <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
     <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
     <script>
-    $.widget.bridge('uibutton', $.ui.button);
+        $.widget.bridge('uibutton', $.ui.button);
     </script>
     <!-- Bootstrap 3.3.5 -->
     <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
@@ -216,6 +216,7 @@
     <script src="{{ url_for('static', filename='dist/js/demo.js') }}"></script>
     <!-- custom -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/custom.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bulletins.js') }}"></script>
     <!-- Begin Modal Zone -->
     <!-- Session Modal. Press left-arrow key to see the modal. -->
     <div id="sessionModal" class="modal fade" role="dialog">

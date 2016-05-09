@@ -149,7 +149,7 @@ def studentBulletins(organization_id):
 def commentOnArticle(organization_id):
     status = {'SUCCESS': '0'}
 
-    if request.methods == 'GET':
+    if request.method == 'GET':
         return json.dumps(status);
 
     try:
@@ -159,10 +159,10 @@ def commentOnArticle(organization_id):
         if success:     # Added comment
             status['SUCCESS'] = '1'
         
-        return status
+        return json.dumps(status);
 
     except Exception as e:
-        return status
+        return json.dumps(status);
 
 
 @app.route('/interests')
