@@ -425,7 +425,7 @@ class Student(Database):
 		try:
 			self.session.execute("""
 				SELECT n.ArticleID, n.ArticleTitle, n.ArticleContent 
-					FROM NewsfeedArticles as n WHERE n.OrganizationID = %s;
+					FROM NewsfeedArticle as n WHERE n.OrganizationID = %s;
 			""", org_id)
 
 			arts =  self.session.fetchall()
@@ -440,9 +440,14 @@ class Student(Database):
 	def getComments(self, org_id):
 		try:
 			self.session.execute("""
-				SELECT * FROM Comment 
-					WHERE Comment.`Article_fk` IN
-					(SELECT n.`ArticleID FROM NewsfeedArticle as n 
+				SELECT * FROM Comment as c 
+					 JOIN
+						Student as s
+					ON
+						s.`UID` = c.`Author_fk`
+					WHERE 
+						c.`Article_fk` IN
+					(SELECT n.`ArticleID` FROM NewsfeedArticle as n 
 						WHERE n.OrganizationID = %s);
 			""", org_id)
 

@@ -3,6 +3,7 @@ $(".addComment").on("click", function() {
 	data["studentID"] = $(this).attr("person");
 	data["studentComment"] = $(this).closest(".input-group").find("input").val();
 	data["articleID"] = $(this).attr("artID");
+	$(this).closest(".input-group").find("input").val("");
 
     $.ajax({
         url: '/studentBulletins/comment/' + $("#hiddenOrg").val(),
@@ -16,13 +17,17 @@ $(".addComment").on("click", function() {
             } else {//successfully can make comment
                         
           	 var chatToss = "<div class='item'>" +
-							"<img src='{{ url_for('static', filename='dist/img/spartan.jpg') }}' alt='user image' class='online'>" +
-							"<p class='message'>" +
-							data["studentComment"] +
-							"</p>" +
-							"</div>"
-			console.log("this is what I'm selecting");
-			console.log($(".chat[artID='"+ data["articleID"] +"']"));			
+								"<p class='chatBlue well text-right'>" +
+									"<span class='pull-left'>" +
+										$(".grabAndGo").text().replace(/ /g,'') +
+									"says... </span> "+
+									data["studentComment"] +
+								"</p>" +
+							"</div>";
+
+
+
+			// console.log($(".grabAndGo").text().replace(/ /g,''));
 			$(".chat[artID='"+ data["articleID"] +"']").append(chatToss);
             
 

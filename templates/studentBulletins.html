@@ -30,7 +30,7 @@
 
 
 <!-- justin attempts to make dynamic bulletins-->
- {% for key in organizationData.Details %}
+ {% for key in articles %}
                 <div class="box box-success">
                     <div class="box-header">
                         <i class="fa fa-comments-o"></i>
@@ -49,9 +49,24 @@
                                 {{key.ArticleContent}}
                             </p>
 
-                            <p>
-                                {{ key.Content }}
-                            </p>
+                           
+                             {% for runner in comments %}   
+
+                                {% if runner['Article_fk'] == key['ArticleID'] %}
+
+                                <div class="item">
+                                <p class="chatBlue well text-right"> 
+                                <span class="pull-left">{{runner.FirstName}} {{runner.LastName}} says...</span>  
+                                {{ runner.Content }}
+                                </p> 
+
+
+                                </div>
+
+
+                                {% endif %}
+                             {% endfor %}
+                   
 
                         </div>
                         <!-- /.item -->
@@ -92,7 +107,11 @@
                     <h4 class="modal-title">oraganizationData!</h4>
                 </div>
                 <div class="modal-body">
-                    <p>{{organizationData}}</p>
+                    <div><p>{{organizationData}}</p></div>
+                    <hr />
+                    <div>{{comments}}</div>
+                    <hr />
+                    <div>{{articles}}</div>
                 </div>
             </div>
         </div>
