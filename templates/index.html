@@ -36,7 +36,7 @@
                         <p>The purpose of this database is to organize all the various clubs and organizations on campus as well as introduce students to new areas of interest. The main user is the student, whether member or non-member. Non-members of a club will instantaneously be able to learn all the salient details of any club, such the purpose, list of officers, meeting times, location, and cost of entry. Members, specifically officers, will be able to monitor their members and gauge the overall interest level of the organization. Administrators will have the final say in what goes on within the organization, along with who may join and how students will be dismissed from their duties with said organization.</p>
                     </div>
                     <div style="float:right">
-                        <img src="http://www.sjsu.edu/sjsuhome/pics/statues-02.jpg" width="450px" height="auto">
+                        <img src="{{ url_for('static', filename='images/sjsu-statues.jpg') }}" width="450px" height="auto">
                     </div>
                     <br>
                     <br>
@@ -52,18 +52,15 @@
                     <br>
                     <hr width="85%">
                     <div class="col-lg-4 col-sm-6 col-xs-12">
-                        <a href="#"><h3>Society of Computer Engineers</h3>
-                     <img src="https://sce.engr.sjsu.edu/images/SCE.png" class="thumbnail img-responsive">
+                     <img src="{{ url_for('static', filename='images/SCE.png') }}" class="thumbnail img-responsive">
                 </a>
                     </div>
                     <div class="col-lg-4 col-sm-6 col-xs-12">
-                        <a href="#"><h3>Society of Women Engineers</h3>
-                     <img src="http://web.utk.edu/~swe/img/home/swe_logo.jpg" class="thumbnail img-responsive">
+                     <img src="{{ url_for('static', filename='images/swe_logo.jpg') }}" class="thumbnail img-responsive">
                 </a>
                     </div>
                     <div class="col-lg-4 col-sm-6 col-xs-12">
-                        <a href="#"><h3>Club</h3>
-                     <img src="https://pbs.twimg.com/profile_images/345880439/sjsu_logo_color_web_400x400.jpg" class="thumbnail img-responsive">
+                     <img src="{{ url_for('static', filename='images/sjsu_logo.jpg') }}" class="thumbnail img-responsive">
                 </a>
                     </div>
                 </div>
