@@ -545,11 +545,13 @@ class Student(Database):
 		else:
 			return ''		
 	
-	def getAllInterests(self):
+	def getAllInterests(self, studentUID):
 		try:
 			self.session.execute("""
-				SELECT * FROM Interest;
-			""")
+				SELECT * FROM Interest WHERE Interest.InterestID NOT IN
+				( SELECT StudentInterest.Interest_fk FROM StudentInterest
+					WHERE Student_fk = %s  
+				 );""", studentUID)
 
 			it = self.session.fetchall()
 			if len(it) > 0:

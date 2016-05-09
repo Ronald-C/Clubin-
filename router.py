@@ -144,9 +144,33 @@ def studentBulletins(organization_id):
 
     return render_template('studentBulletins.html', organizationData=a)
 
+@app.route('/studentBulletins/<organization_id>/comment', methods=['GET', 'POST'])
+@login_required
+def commentOnArticle():
+    status = {'SUCCESS': '0'}
+
+    if request.methods == 'GET':
+        return json.dumps(status);
+
+    try:
+        sjsuid = session['Info']['Student']['SJSUID']
+        success = student.commentArticle(sjsuid, request.form['studentComment'], request.form['articleID'])
+
+        if success:     # Added comment
+            status['SUCCESS'] = '1'
+        
+        return status
+
+    except Exception as e:
+        return status
+
+
 @app.route('/interests')
 @login_required
 def interests():
+    """ 
+    NOTE: Really returning all interests not associated with student. 
+    """
     ints = student.getAllInterests(session['Info']['Student']['UID'])
     return render_template('interests.html', interest=ints)
 
