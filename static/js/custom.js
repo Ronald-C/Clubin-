@@ -64,6 +64,11 @@ $(".submitSingle").on("click", function() {
             return;
         }
 
+        if(p1.length < 6) {
+            toastr["warning"]("Your password is not long enough. Six character minimum.");
+            return;
+        }
+
         //Password doesn't have all StormPath requirements
         // var storm = new RegExp("^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/");
         // if(storm.test(p1)) {
@@ -131,3 +136,13 @@ if (e.keyCode == 39) {
 }
 });
 
+//quick access to the entire bulletin variable
+$(document).keyup(function (e) {
+if (e.keyCode == 40) {
+    $("#interestsModal").modal("toggle");
+}
+});
+
+$(".flashed").each( function() {
+    toastr["success"]( $(this).val() );
+});

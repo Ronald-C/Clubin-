@@ -64,7 +64,6 @@ class Registration(Database):
 						`MiddleName`) VALUES (%s, %s, %s, %s, %s);
 					""", (studentID, studentEmail, FirstName, LastName, MiddleName) ) 
 
-				self.conn.commit()
 
 				try:
 					 # Create a new Stormpath Account.
@@ -76,12 +75,15 @@ class Registration(Database):
 					    'password': Password
 					})
 
+					self.conn.commit()
+
 					# Everything is OK
 					errors['SUCCESS'] = '1'
 					return errors
 
 				except Exception as e:
 					# Stormpath.accounts.create raises error on failure
+					self.conn.rollback()
 					raise TypeError(str(e))
 
 			else:
