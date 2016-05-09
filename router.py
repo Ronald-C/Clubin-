@@ -142,7 +142,10 @@ def studentBulletins(organization_id):
     if a == False:
         render_template('errors/500.html')
 
-    return render_template('studentBulletins.html', organizationData=a)
+    articles = student.getArticles(organization_id)
+    comments = student.getComments(organization_id)
+
+    return render_template('studentBulletins.html', organizationData=a, articles=articles, comments=comments)
 
 @app.route('/studentBulletins/comment/<organization_id>', methods=['GET', 'POST'])
 @login_required

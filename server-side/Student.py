@@ -421,6 +421,37 @@ class Student(Database):
 			self.conn.rollback()
 			self._printError("%s", e)
 
+	def getArticles(self, org_id):
+		try:
+			self.session.execute("""
+				SELECT n.ArticleID, n.ArticleTitle, n.ArticleContent 
+					FROM NewsfeedArticles as n WHERE n.OrganizationID = %s;
+			""", org_id)
+
+			arts =  self.session.fetchall()
+			if len(arts) > 0:
+				return arts
+			else:
+				return False
+
+		except Exception as e:
+			return False
+
+	def getComments(org_id):
+		try:
+			self.session.execute("""
+				
+			""", org_id)
+
+			arts =  self.session.fetchall()
+			if len(arts) > 0:
+				return arts
+			else:
+				return False
+
+		except Exception as e:
+			return False
+
 	def editStudentInfo(self, studentID, **kwargs):
 		try:
 			# Validate arguments
