@@ -13,7 +13,19 @@ $(".addComment").on("click", function() {
             if( builder["success"] == "0" ) {
             	toastr.clear();
             	toastr["warning"]("Sorry, we can't post that message");
-            } else {//successfully
+            } else {//successfully can make comment
+                        
+          	 var chatToss = "<div class='item'>" +
+							"<img src='{{ url_for('static', filename='dist/img/spartan.jpg') }}' alt='user image' class='online'>" +
+							"<p class='message'>" +
+							data["studentComment"] +
+							"</p>" +
+							"</div>"
+			console.log("this is what I'm selecting");
+			console.log($(".chat[artID='"+ data["articleID"] +"']"));			
+			$(".chat[artID='"+ data["articleID"] +"']").append(chatToss);
+            
+
 
             }
         }//end of success

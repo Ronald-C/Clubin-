@@ -2,4 +2,10 @@
 -webkit-mask-image: -webkit-gradient(linear, center bottom, right center, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)))
 }
 
+.small-box {
+	cursor: pointer;
+}
+
+.grow { transition: all .2s ease-in-out; }
+.grow:hover { transform: scale(1.1); }
 
