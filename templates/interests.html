@@ -8,10 +8,10 @@
 
 {% block body %}
 	{{ super() }}
-            {{interest}}
+            
             <!-- Main content -->
-            <section class="content">
-                <h2>My Interests</h2>
+            <section class="content text-center">
+                <h2>{{ session.Info.Student.FirstName }} {{ session.Info.Student.LastName }}'s Interests</h2>
                 <!-- Small boxes (Stat box) -->
                 <div class="row">
 
@@ -20,17 +20,57 @@
                     {% for index in session.Info.Interests %}
                         <div class="col-lg-3 col-xs-6">
                         <!-- small box -->
-                        <div class="small-box bg-aqua">
+                        <div interestValue="{{index['InterestID']}}" class="small-box bg-aqua">
                             <div class="inner text-center">
                                 <h3>{{index['Title']}}</h3>
                             </div>
                         </div>
                     </div>
                     {% endfor %}
+                </div>
+                <!-- end row -->
 
 
+                <div class="row">
 
+                <br />
+                <br />
+                <h2>Might you be interested in these?</h2></div>
+                <div class="row">
+
+                    <!-- Interests that this person does not have. -->
+                    {% for key in interest %}
+                            <div class="col-lg-3 col-xs-6">
+                            <!-- small box -->
+                            <div  class="small-box bg-red">
+                                <div class="inner text-center">
+                                    <h3>{{key['Title']}}</h3>
+                                </div>
+                            </div>
+                        </div>                    
+                    {% endfor %}
 
                 </div>
+
+
+
+    <!-- Begin Modal Zone -->
+    <!-- Session Modal. Press left-arrow key to see the modal. -->
+    <div id="interestsModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">allTheInterests!</h4>
+                </div>
+                <div class="modal-body">
+                    <p>{{interest}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Modal Zone -->
+
             </section>
 {%endblock%}

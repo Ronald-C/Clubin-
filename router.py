@@ -147,7 +147,7 @@ def studentBulletins(organization_id):
 @app.route('/interests')
 @login_required
 def interests():
-    ints = student.getAllInterests()
+    ints = student.getAllInterests(session['Info']['Student']['UID'])
     return render_template('interests.html', interest=ints)
 
 @app.route('/profile')
