@@ -145,6 +145,12 @@ def studentBulletins(organization_id):
     articles = student.getArticles(organization_id)
     comments = student.getComments(organization_id)
 
+    if articles == False:
+        articles = []
+
+    if comments == False:
+        comments = []
+
     return render_template('studentBulletins.html', organizationData=a, articles=articles, comments=comments)
 
 @app.route('/studentBulletins/comment/<organization_id>', methods=['GET', 'POST'])
