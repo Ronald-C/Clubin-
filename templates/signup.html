@@ -8,7 +8,12 @@
 
 {% block body %}
 	{{ super() }}
-
+<style>
+	.required:before{
+		content: '*';
+		color:red;
+	}
+</style>
       <!-- Content Wrapper. Contains page content -->
   <center>
   <div class="content-wrapper" style="width:80%">
@@ -67,7 +72,7 @@
                         <h4 class="modal-title">Hello there, New Person</h4>
                     </div>
                     <div class="modal-body">
-
+						<h4><content style="color:red">*</content> means the field is required.</h4>
                         <div class="row">
 
                             <div class="col-lg-offset-2 col-lg-8">
@@ -75,58 +80,58 @@
                                 <form id="singleForm" class="form-horizontal" role="form" autocomplete="off">
 
                                     <div class="form-group">
-                                        <label class="control-label col-lg-2" for="FirstNameSingle">First Name</label>
-                                        <div class="col-lg-10">
-                                            <input id="FirstNameSingle" class=" mandatory form-control" type="text" name="FirstName"></input>
+                                        <label class="control-label col-lg-3 required" for="FirstNameSingle">First Name</label>
+                                        <div class="col-lg-9">
+                                            <input id="FirstNameSingle" placeholder="First Name" class=" mandatory form-control" type="text" name="FirstName"></input>
                                         </div>
                                     </div>
 
                                     <div class="form-group">
-                                        <label class="control-label col-lg-2" for="MiddleNameSingle">M. Name</label>
-                                        <div class="col-lg-10">
-                                            <input id="MiddleNameSingle" class="form-control" type="text" name="MiddleName"></input>
-
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="control-label col-lg-2" for="LastNameSingle">Last Name</label>
-                                        <div class="col-lg-10">
-                                            <input id="LastNameSingle" class="mandatory form-control" type="text" name="LastName"></input>
-
+                                        <label class="control-label col-lg-3 required" for="MiddleNameSingle">Middle Name</label>
+                                        <div class="col-lg-9">
+                                            <input id="MiddleNameSingle" placeholder="Middle Name" class="form-control" type="text" name="MiddleName"></input>
 
                                         </div>
                                     </div>
 
                                     <div class="form-group">
-                                        <label type="number" patter=".{9,9}" class="control-label col-lg-2" for="SJSUIDSingle">SJSUID</label>
-                                        <div class="col-lg-10">
+                                        <label class="control-label col-lg-3 required" for="LastNameSingle">Last Name</label>
+                                        <div class="col-lg-9">
+                                            <input id="LastNameSingle" placeholder="Last Name" class="mandatory form-control" type="text" name="LastName"></input>
 
-                                            <input id="SJSUIDSingle" class="mandatory form-control" type="text" name="SJSUID"></input>
 
                                         </div>
                                     </div>
 
                                     <div class="form-group">
-                                        <label class="control-label col-lg-2" for="emailSingle">E-mail</label>
-                                        <div class="col-lg-10">
-                                            <input id="emailSingle" class="mandatory form-control" type="email" name="Email"></input>
+                                        <label type="number" patter=".{9,9}" class="control-label col-lg-3 required" for="SJSUIDSingle">SJSUID</label>
+                                        <div class="col-lg-9">
+
+                                            <input id="SJSUIDSingle" placeholder="001234567" class="mandatory form-control" type="text" name="SJSUID"></input>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3 required" for="emailSingle">E-mail</label>
+                                        <div class="col-lg-9">
+                                            <input id="emailSingle" placeholder="sample@example.com" class="mandatory form-control" type="email" name="Email"></input>
                                         </div>
                                     </div>
 
                                     <br /><br />
 
                                     <div class="form-group">
-                                        <label class="control-label col-lg-2" for="PasswordSingle">Password</label>
-                                        <div class="col-lg-10">
-                                            <input id="PasswordSingle" class="mandatory form-control" type="password" name="Password"></input>
+                                        <label class="control-label col-lg-3 required" for="PasswordSingle">Password</label>
+                                        <div class="col-lg-9">
+                                            <input id="PasswordSingle" placeholder="Secret1234" class="mandatory form-control" type="password" name="Password"></input>
 
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="control-label col-lg-2" for="PasswordSingleAgain">Confirm</label>
-                                        <div class="col-lg-10">
-                                            <input id="PasswordSingleAgain" class="mandatory form-control" type="password" name="Password2"></input>
+                                        <label class="control-label col-lg-3 required" for="PasswordSingleAgain">Confirm</label>
+                                        <div class="col-lg-9">
+                                            <input id="PasswordSingleAgain" placeholder="Secret1234" class="mandatory form-control" type="password" name="Password2"></input>
 
                                         </div>
                                     </div>
