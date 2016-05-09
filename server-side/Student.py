@@ -437,10 +437,13 @@ class Student(Database):
 		except Exception as e:
 			return False
 
-	def getComments(org_id):
+	def getComments(self, org_id):
 		try:
 			self.session.execute("""
-				
+				SELECT * FROM Comment 
+					WHERE Comment.`Article_fk` IN
+					(SELECT n.`ArticleID FROM NewsfeedArticle as n 
+						WHERE n.OrganizationID = %s);
 			""", org_id)
 
 			arts =  self.session.fetchall()
