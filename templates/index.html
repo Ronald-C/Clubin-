@@ -11,9 +11,7 @@
     <div class="container">
         <!-- Content Header (Page header) -->
         <center>
-            <section class="content-header">
-                <p style="font-size:100px">Clubin' </p>
-            </section>
+            
             <div id="flashZone">
                 {% with messages = get_flashed_messages(with_categories=False) %} {% if messages %}
                 <ul class=flashes>
@@ -26,7 +24,11 @@
         </center>
         <!-- Main content -->
         <section class="content">
+			
             <div class="box box-default">
+				<center><section class="content-header">
+                <p style="font-size:150px">Clubin' </p>
+					</section></center>
                 <div class="box-header with-border">
                 </div>
                 <div class="box-body">
@@ -51,21 +53,21 @@
                     <br>
                     <br>
                     <hr width="85%">
-                    <div class="col-lg-4 col-sm-6 col-xs-12">
+					<center><div><h1 style="color:#3c8dbc">Featured Clubs</h1></div> <div class="col-lg-4 col-sm-6 col-xs-12">
                         <a href="#"><h3>Society of Computer Engineers</h3>
                      <img src="https://sce.engr.sjsu.edu/images/SCE.png" class="thumbnail img-responsive">
                 </a>
+                    </div>
+                 <div class="col-lg-4 col-sm-6 col-xs-12">
+                     <a href="#"><h3>ASCE</h3>
+                     <img src="https://sites.google.com/site/asceuic/_/rsrc/1414020234487/home/ASCE%20Logo%20Square%20Icon.png" class="thumbnail img-responsive">
+                         </a>
                     </div>
                     <div class="col-lg-4 col-sm-6 col-xs-12">
                         <a href="#"><h3>Society of Women Engineers</h3>
                      <img src="http://web.utk.edu/~swe/img/home/swe_logo.jpg" class="thumbnail img-responsive">
                 </a>
-                    </div>
-                    <div class="col-lg-4 col-sm-6 col-xs-12">
-                        <a href="#"><h3>Club</h3>
-                     <img src="https://pbs.twimg.com/profile_images/345880439/sjsu_logo_color_web_400x400.jpg" class="thumbnail img-responsive">
-                </a>
-                    </div>
+                       </div></center>
                 </div>
                 <!-- /.box-body -->
             </div>
