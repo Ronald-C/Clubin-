@@ -18,7 +18,7 @@
                 {% with messages = get_flashed_messages(with_categories=False) %} {% if messages %}
                 <ul class=flashes>
                     {% for message in messages %}
-                    <li> {{ message }} </li>
+                    <input class="flashed" type="hidden" value="{{message}}"/>
                     {% endfor %}
                 </ul>
                 {% endif %} {% endwith %}
