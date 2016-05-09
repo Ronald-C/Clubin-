@@ -144,9 +144,9 @@ def studentBulletins(organization_id):
 
     return render_template('studentBulletins.html', organizationData=a)
 
-@app.route('/studentBulletins/<organization_id>/comment', methods=['GET', 'POST'])
+@app.route('/studentBulletins/comment/<organization_id>', methods=['GET', 'POST'])
 @login_required
-def commentOnArticle():
+def commentOnArticle(organization_id):
     status = {'SUCCESS': '0'}
 
     if request.methods == 'GET':
