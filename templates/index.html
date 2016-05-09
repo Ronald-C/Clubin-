@@ -1,6 +1,6 @@
 {% extends "hometemplate.html" %} {% block head %} {{ super() }} {% endblock %} {% block body %} {{ super() }}
 <!-- Full Width Column -->
-<div style="background-image:url(http://www.designbolts.com/wp-content/uploads/2013/02/Cubes-Grey-Seamless-Pattern-For-Website-Background.jpg)"class="content-wrapper">
+<div style="background-image:url(http://www.designbolts.com/wp-content/uploads/2013/02/Cubes-Grey-Seamless-Pattern-For-Website-Background.jpg)" class="content-wrapper">
     <div class="container">
         <!-- Content Header (Page header) -->
         <center>
@@ -16,7 +16,6 @@
         <!-- Main content -->
         <section class="content">
             <div class="box box-default">
-
                 <center>
                     <section class="content-header">
                         <p style="font-size:150px">Clubin' </p>
@@ -46,28 +45,23 @@
                     <br>
                     <br>
                     <hr width="85%">
-
-
-					<center>
-						
-					<div><h1 style="color:#3c8dbc">Featured Clubs</h1></div> 
-					 <div class="col-lg-4 col-sm-6 col-xs-12">
-                     <a href=""><h4>American Society of Civil Engineers</h4>
-                     <img src="https://pbs.twimg.com/profile_images/461217917984448512/OMojrF52.jpeg" class="thumbnail img-responsive">
-						 </a></div>
-                   
-					<div class="col-lg-4 col-sm-6 col-xs-12">
-                        <a href="{{ url_for('static', filename='images/SCE.png') }}"><h3>Society of Computer Engineers</h3>
-                     <img src="https://sce.engr.sjsu.edu/images/SCE.png" class="thumbnail img-responsive">
-                	</a>
-                    </div>
-                    <div class="col-lg-4 col-sm-6 col-xs-12">
-                        <a href="{{ url_for('static', filename='images/swe_logo.jpg') }}"><h4>Society of Women Engineers</h4>
-                     <img src="http://web.utk.edu/~swe/img/home/swe_logo.jpg" class="thumbnail img-responsive">
-                	</a>
-                       </div></center>
-					<hr width = "85%">
-
+                    <center>
+                        <div>
+                            <h1 style="color:#3c8dbc">Featured Clubs</h1></div>
+                        <div class="col-lg-4 col-sm-6 col-xs-12">
+                            <img src="{{ url_for('static', filename='images/asce.jpeg') }}" class="thumbnail img-responsive">
+                            </a>
+                        </div>
+                        <div class="col-lg-4 col-sm-6 col-xs-12">
+                            <img src="{{ url_for('static', filename='images/SCE.png') }}" class="thumbnail img-responsive">
+                            </a>
+                        </div>
+                        <div class="col-lg-4 col-sm-6 col-xs-12">
+                            <img src="{{ url_for('static', filename='images/swe_logo.jpg') }}" class="thumbnail img-responsive">
+                            </a>
+                        </div>
+                    </center>
+                    <hr width="85%">
                 </div>
                 <!-- /.box-body -->
             </div>
