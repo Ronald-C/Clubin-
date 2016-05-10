@@ -66,13 +66,14 @@ def studentRegistration():
         _studentID = request.form['SJSUID']
         _FirstName = request.form['FirstName']
         _LastName = request.form['LastName']
+        _Major = request.form['Major'] # grabs major data from signup form
         _Password = request.form['Password']
         _MiddleName = request.form['MiddleName']
         _studentEmail = request.form['Email']
 
         # Create a student account in database.
         status = Register._addStudent(studentID=_studentID, studentEmail=_studentEmail, 
-            FirstName=_FirstName, LastName=_LastName, Password=_Password, MiddleName=_MiddleName)
+            FirstName=_FirstName, LastName=_LastName, Major=_Major, Password=_Password, MiddleName=_MiddleName) # updated with Major
 
         if isinstance(status, dict):            
             return json.dumps(status)

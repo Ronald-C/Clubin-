@@ -66,6 +66,12 @@ class Validate(object):
 			'type': 'string',
 			'minlength': 3,
 			'maxlength': 45
+		},
+		'Major': {	# Validation for the students Major it is optional
+			'required': True,
+			'type': 'string',
+			'minlength': 3,
+			'maxlength': 45
 		}
 	}
 

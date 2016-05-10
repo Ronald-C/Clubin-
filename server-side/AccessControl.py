@@ -33,7 +33,7 @@ class Registration(Database):
 		self.conn = super(Registration, self).connect()
 		self.session = super(Registration, self).getSession()
 
-	def _addStudent(self, studentID, studentEmail, FirstName, LastName, Password, MiddleName=None):
+	def _addStudent(self, studentID, studentEmail, FirstName, LastName, Major, Password, MiddleName=None): # major to attributes
 		errors = { 'SUCCESS': '', 'ERROR': '' }     # status return
 
 		try:
@@ -42,6 +42,7 @@ class Registration(Database):
 				'SJSUID': studentID,
 				'FirstName': FirstName,
 				'LastName': LastName,
+				'Major': Major,				# validates major
 				'MiddleName': MiddleName,
 				'Email': studentEmail
 			})
@@ -60,9 +61,9 @@ class Registration(Database):
 			if not exist:
 				# Insert student entity
 				self.session.execute("""
-					INSERT INTO `Student` (`SJSUID`, `Email`, `FirstName`, `LastName`,
-						`MiddleName`) VALUES (%s, %s, %s, %s, %s);
-					""", (studentID, studentEmail, FirstName, LastName, MiddleName) ) 
+					INSERT INTO `Student` (`SJSUID`, `Email`, `FirstName`, `MIddleName`,`LastName`,
+						`Major`) VALUES (%s, %s, %s, %s, %s,%s);										
+					""", (studentID, studentEmail, FirstName, MiddleName,LastName,Major)) #fixed insert query to incorporate major for the student
 
 
 				try:

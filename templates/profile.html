@@ -26,9 +26,9 @@
                 <div class="box-body box-profile">
                   <img class="profile-user-img img-responsive img-circle" src="static/dist/img/spartan.jpg" alt="User profile picture">
                   <p class="text-muted text-center">
-                  	{{session.Info.Student.FirstName}} {{session.Info.Student.LastName}}
+                  	{{session.Info.Student.FirstName}} {{session.Info.Student.MiddleName}} {{session.Info.Student.LastName}} <!--Added middlename to profile -->
                   </p>
-                  <p class="text-muted text-center">{{session.Info.Student.Major}}</p>
+                  <p class="text-muted text-center">{{session.Info.Student.Major}}</p> <!-- made major dynamic on profile view-->
                 </div><!-- /.box-body -->
               </div><!-- /.box -->
 
